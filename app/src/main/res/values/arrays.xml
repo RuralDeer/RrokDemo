@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	
+	<string-array name="table">
+		<item>Get请求</item>
+		<item>Post-表单</item>
+		<item>Post-Json</item>
+		<item>Upload</item>
+		<item>Download</item>
+		<item>Cookie</item>
+	</string-array>
+	
+	
+	<string-array name="data_type">
+		<item>无缓存</item>
+		<item>只读取缓存,但依然会请求网络</item>
+		<item>先读缓存,再获取网络</item>
+		<item>获取网络失败,读取缓存</item>
+		<item>读取缓存失败,再获取网络</item>
+	</string-array>
+	
+	
+</resources>

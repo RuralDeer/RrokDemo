@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	tools:context=".MainActivity">
+	
+	<com.lzt.flowviews.view.FlowView
+		android:id="@+id/flowView"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:fv_useGrid="true"/>
+	
+	<android.support.design.widget.TabLayout
+		android:id="@+id/tabLayout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:tabBackground="@android:color/holo_green_light"
+		app:tabIndicatorColor="@android:color/holo_orange_light"
+		app:tabIndicatorHeight="5dp"
+		app:tabMode="scrollable"
+		app:tabSelectedTextColor="@android:color/holo_red_light"
+		app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget" />
+	
+	
+	<com.cn.demo.fragment.base.FragmentViewPager
+		android:id="@+id/mViewPager"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent" />
+
+</LinearLayout>
