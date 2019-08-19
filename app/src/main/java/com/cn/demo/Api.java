@@ -5,6 +5,7 @@ import com.cn.demo.bean.UserBean;
 
 import java.util.List;
 
+import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -23,10 +24,14 @@ import retrofit2.http.Query;
  */
 public interface Api {
 
-	String BASE_URL = "http://192.168.1.102:8080/";
+	String BASE_URL = "http://192.168.1.110:8080/";
 
 	@GET("getUsers")
 	Call<List<TestBean>> get(@Query("page") int page, @Query("offeset") int offeset);
+
+	@FormUrlEncoded
+	@POST("postUsers")
+	Observable<List<TestBean>> postObs(@Field("page") int page, @Field("offeset") int offeset);
 
 	@FormUrlEncoded
 	@POST("postUsers")

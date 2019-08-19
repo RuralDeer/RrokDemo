@@ -38,6 +38,13 @@ public class FlowApiRequest<T> extends ApiRequest<T, FlowApiRequest<T>, ApiFlowR
 	}
 
 	@Override
+	public FlowApiRequest<T> setRetry(int retryNum,int retryDelay) {
+		this.retryNum = retryNum;
+		this.retryDelay = retryDelay;
+		return this;
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public void enqueue(ApiFlowResult<T> apiFlowResult) {
 		Flowable<Call<T>> flowable = Flowable.just(call);

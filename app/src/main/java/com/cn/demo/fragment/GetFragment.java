@@ -1,6 +1,7 @@
 package com.cn.demo.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.cn.demo.fragment.base.BaseFragment;
 import com.cn.RrokClient;
 import com.cn.request.call.ApiObsResult;
 import com.cn.request.enums.DataSource;
+import com.cn.request.func.retry.ObsRetryFun;
 import com.cn.request.model.ApiResponse;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -20,7 +22,13 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.ObservableTransformer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 
 public class GetFragment extends BaseFragment {

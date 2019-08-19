@@ -3,6 +3,8 @@ package com.cn.request.request.base;
 import com.cn.request.enums.CacheMode;
 import com.cn.request.func.result.CacheResultFunc;
 import com.cn.request.func.result.NetResultFunc;
+import com.cn.request.func.retry.FlowRetryFun;
+import com.cn.request.func.retry.ObsRetryFun;
 import com.cn.request.func.send.SendRequestFunc;
 import com.cn.request.model.ApiResponse;
 import com.cn.request.utils.HttpUtils;
@@ -117,7 +119,8 @@ public abstract class IRxRequest<R, T, Result> {
 	protected Observable<ApiResponse<T>> netObs(Observable<Call<T>> observable) {
 		return observable
 			.map(new SendRequestFunc<T>())
-			.map(new NetResultFunc<T>(apiRequest));
+			.map(new NetResultFunc<T>(apiRequest))
+			.retryWhen(new ObsRetryFun(apiRequest.getRetryNum(), apiRequest.getRetryDelay()));
 	}
 
 
@@ -141,7 +144,8 @@ public abstract class IRxRequest<R, T, Result> {
 	protected Flowable<ApiResponse<T>> netFlow(Flowable<Call<T>> flowable) {
 		return flowable
 			.map(new SendRequestFunc<T>())
-			.map(new NetResultFunc<T>(apiRequest));
+			.map(new NetResultFunc<T>(apiRequest))
+			.retryWhen(new FlowRetryFun(apiRequest.getRetryNum(),apiRequest.getRetryDelay()));
 	}
 
 }

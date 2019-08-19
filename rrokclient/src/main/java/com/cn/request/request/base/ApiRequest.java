@@ -35,6 +35,10 @@ public abstract class ApiRequest<T, R extends ApiRequest, Result> {
 	 */
 	protected Call<T> call;
 
+	protected int retryNum;//最大出错重试次数
+
+	protected int retryDelay;//重试间隔时间
+
 	public ApiRequest(Call<T> call) {
 		this.call = call;
 	}
@@ -42,6 +46,8 @@ public abstract class ApiRequest<T, R extends ApiRequest, Result> {
 	public abstract R setCacheMode(CacheMode cacheMode);
 
 	public abstract R setLifecycleOwner(LifecycleOwner lifecycleOwner);
+
+	public abstract R setRetry(int retryNum,int retryDelay);
 
 	public abstract void enqueue(Result result);
 
@@ -55,5 +61,13 @@ public abstract class ApiRequest<T, R extends ApiRequest, Result> {
 
 	public Call<T> getCall() {
 		return call;
+	}
+
+	public int getRetryNum() {
+		return retryNum;
+	}
+
+	public int getRetryDelay() {
+		return retryDelay;
 	}
 }

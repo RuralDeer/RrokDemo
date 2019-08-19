@@ -27,6 +27,9 @@ public abstract class BaseFragment extends Fragment {
 
 	protected final static int offeset = 20;
 
+	protected final static int retryNum = 3;
+	protected final static int retryDelay = 3000;
+
 	protected TextView mErrorTv;
 	protected DataAdapter mNetAdapter;
 	protected DataAdapter mCacheAdapter;
@@ -68,6 +71,7 @@ public abstract class BaseFragment extends Fragment {
 	protected void req0() {
 		RrokClient.sendByObservable(getCall())
 			.setCacheMode(CacheMode.NONE_CACHE)
+			.setRetry(retryNum,retryDelay)
 			.enqueue(apiObsResult());
 	}
 
@@ -86,6 +90,7 @@ public abstract class BaseFragment extends Fragment {
 	protected void req2() {
 		RrokClient.sendByObservable(getCall())
 			.setCacheMode(CacheMode.USR_CACHE_NETWORK)
+			.setRetry(retryNum,retryDelay)
 			.enqueue(apiObsResult());
 	}
 
@@ -95,6 +100,7 @@ public abstract class BaseFragment extends Fragment {
 	protected void req3() {
 		RrokClient.sendByObservable(getCall())
 			.setCacheMode(CacheMode.NETWORK_ERROR_USE_CACHE)
+			.setRetry(retryNum,retryDelay)
 			.enqueue(apiObsResult());
 	}
 
@@ -104,6 +110,7 @@ public abstract class BaseFragment extends Fragment {
 	protected void req4() {
 		RrokClient.sendByObservable(getCall())
 			.setCacheMode(CacheMode.NOT_CACHE_USE_NETWORK)
+			.setRetry(retryNum,retryDelay)
 			.enqueue(apiObsResult());
 	}
 

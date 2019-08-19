@@ -36,6 +36,12 @@ public class ObsApiRequest<T> extends ApiRequest<T, ObsApiRequest<T>, ApiObsResu
 		return this;
 	}
 
+	@Override
+	public ObsApiRequest<T> setRetry(int retryNum,int retryDelay) {
+		this.retryNum = retryNum;
+		this.retryDelay = retryDelay;
+		return this;
+	}
 
 	@Override
 	public void enqueue(ApiObsResult<T> apiObsResult) {

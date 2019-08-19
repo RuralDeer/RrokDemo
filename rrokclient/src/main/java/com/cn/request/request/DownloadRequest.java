@@ -1,7 +1,7 @@
 package com.cn.request.request;
 
 import com.cn.RrokClient;
-import com.cn.request.request.base.Api;
+import com.cn.request.request.base.BaseApi;
 import com.cn.request.request.base.BaseRequest;
 import com.cn.request.call.ApiBaseFileResult;
 import com.cn.request.func.file.FileConvertFunc;
@@ -11,7 +11,6 @@ import java.io.File;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
-import okhttp3.ResponseBody;
 
 /**
  * Date: 2019/8/1
@@ -32,7 +31,7 @@ public class DownloadRequest extends BaseRequest<DownloadRequest> {
 	}
 
 	public void enqueue(final ApiBaseFileResult<File> apiBaseFileResult) {
-		RrokClient.create(Api.class)
+		RrokClient.create(BaseApi.class)
 			.downLoadFile(headers, url, params)
 			.map(new FileConvertFunc(destFileDir, destFileName, apiBaseFileResult))
 			.compose(RxScheduler.<File>Obs_io_main())

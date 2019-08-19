@@ -16,7 +16,7 @@ import retrofit2.Response;
 public class SendRequestFunc<T> implements Function<Call<T>, T> {
 	@Override
 	public T apply(Call<T> tCall) throws Exception {
-		Response<T> response = tCall.execute();
+		Response<T> response = tCall.clone().execute();
 		if (!response.isSuccessful()) {
 			throw new Exception(response.errorBody().string());
 		}

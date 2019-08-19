@@ -23,7 +23,7 @@ import retrofit2.http.Url;
  * <p>
  * author: 鹿文龙
  */
-public interface Api {
+public interface BaseApi {
 
 	/**
 	 * 多文件上传
