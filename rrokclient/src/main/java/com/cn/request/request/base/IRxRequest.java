@@ -7,6 +7,7 @@ import com.cn.request.func.retry.FlowRetryFun;
 import com.cn.request.func.retry.ObsRetryFun;
 import com.cn.request.func.send.SendRequestFunc;
 import com.cn.request.model.ApiResponse;
+import com.cn.request.transformer.CacheTransformer;
 import com.cn.request.utils.HttpUtils;
 
 import io.reactivex.Flowable;
@@ -120,6 +121,7 @@ public abstract class IRxRequest<R, T, Result> {
 		return observable
 			.map(new SendRequestFunc<T>())
 			.map(new NetResultFunc<T>(apiRequest))
+			.compose(CacheTransformer.<ApiResponse<T>>obsTransformer(CacheMode.NONE_CACHE))
 			.retryWhen(new ObsRetryFun(apiRequest.getRetryNum(), apiRequest.getRetryDelay()));
 	}
 

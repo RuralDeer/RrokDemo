@@ -5,6 +5,7 @@ import com.cn.request.utils.HttpUtils;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
@@ -36,6 +37,7 @@ public class RetrofitFactory {
 			.baseUrl(baseUrl)
 			.client(okHttpClient)
 			.addConverterFactory(null == factory ? GsonConverterFactory.create() : factory)
+			.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
 			.build();
 	}
 

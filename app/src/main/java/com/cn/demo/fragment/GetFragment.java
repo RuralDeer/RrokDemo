@@ -1,20 +1,19 @@
 package com.cn.demo.fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.cn.RrokClient;
 import com.cn.demo.Api;
 import com.cn.demo.R;
 import com.cn.demo.bean.TestBean;
 import com.cn.demo.events.SendEvent;
 import com.cn.demo.fragment.base.BaseFragment;
-import com.cn.RrokClient;
+import com.cn.demo.net.HttpTest;
 import com.cn.request.call.ApiObsResult;
 import com.cn.request.enums.DataSource;
-import com.cn.request.func.retry.ObsRetryFun;
 import com.cn.request.model.ApiResponse;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -25,10 +24,9 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
+import okhttp3.Request;
 import retrofit2.Call;
 
 public class GetFragment extends BaseFragment {
@@ -62,7 +60,20 @@ public class GetFragment extends BaseFragment {
 		mCacheAdapter.clear();
 		switch (event.position) {
 			case 0:
-				req0();
+				HttpTest.transformer(RrokClient.create(Api.class).getObs(page, offeset))
+					.subscribe(new Consumer<List<TestBean>>() {
+						@Override
+						public void accept(List<TestBean> testBeans) throws Exception {
+							mNetAdapter.addData(testBeans);
+						}
+					}, new Consumer<Throwable>() {
+						@Override
+						public void accept(Throwable throwable) throws Exception {
+							mErrorTv.setText(throwable.getMessage());
+						}
+					});
+
+				//req0();
 				break;
 			case 1:
 				req1();

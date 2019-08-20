@@ -17,6 +17,8 @@ import com.cn.request.utils.HttpUtils;
 
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Converter;
@@ -159,6 +161,13 @@ public class RrokClient {
 		return instance.getRetrofit().create(clz);
 	}
 
+	public static <T> Observable<T> tObservable(Observable<T> observable) {
+		return observable;
+	}
+
+	public static <T> Flowable<T> tFlowable(Flowable<T> flowable) {
+		return flowable;
+	}
 
 	/**
 	 * Observable 请求

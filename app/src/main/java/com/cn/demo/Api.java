@@ -24,10 +24,13 @@ import retrofit2.http.Query;
  */
 public interface Api {
 
-	String BASE_URL = "http://192.168.1.110:8080/";
+	String BASE_URL = "http://192.168.1.100:8080/";
 
 	@GET("getUsers")
 	Call<List<TestBean>> get(@Query("page") int page, @Query("offeset") int offeset);
+
+	@GET("getUsers")
+	Observable<List<TestBean>> getObs(@Query("page") int page, @Query("offeset") int offeset);
 
 	@FormUrlEncoded
 	@POST("postUsers")
