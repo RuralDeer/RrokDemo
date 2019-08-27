@@ -1,7 +1,5 @@
 package com.cn.request.cache;
 
-import com.cn.request.factory.ILruCache;
-
 /**
  * Date: 2019/7/15
  * <p>

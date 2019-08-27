@@ -1,7 +1,5 @@
 package com.cn.request.utils;
 
-import com.cn.request.request.base.ApiRequest;
-
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -37,11 +35,10 @@ public class HttpUtils {
 	/**
 	 * 根据 Request中的 地址 和 参数生成缓存Key
 	 *
-	 * @param apiRequest
+	 * @param request
 	 * @return
 	 */
-	public static String getCacheKey(ApiRequest apiRequest) {
-		Request request = apiRequest.getCall().request();
+	public static String getCacheKey(Request request) {
 		HttpUrl httpUrl = request.url();
 		String url = httpUrl.url().toString();
 

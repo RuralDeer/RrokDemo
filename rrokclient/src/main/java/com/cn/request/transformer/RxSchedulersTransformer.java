@@ -1,4 +1,4 @@
-package com.cn.request.factory;
+package com.cn.request.transformer;
 
 import org.reactivestreams.Publisher;
 
@@ -20,7 +20,7 @@ import io.reactivex.schedulers.Schedulers;
  * <p>
  * description：RXjava 线程调度
  */
-public class RxScheduler {
+public class RxSchedulersTransformer {
 	/**
 	 * 统一线程处理
 	 * <p>

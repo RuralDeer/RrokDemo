@@ -14,7 +14,7 @@ import io.reactivex.functions.Function;
  * <p>
  * author: 鹿文龙
  */
-public class FlowRetryFun implements Function<Flowable<Throwable>, Publisher<?>> {
+public class FlowRetryFunc implements Function<Flowable<Throwable>, Publisher<?>> {
 
 	private int maxNum;//最大出错重试次数
 
@@ -22,7 +22,7 @@ public class FlowRetryFun implements Function<Flowable<Throwable>, Publisher<?>>
 
 	private int retryDelay;//重试间隔时间
 
-	public FlowRetryFun(int maxNum, int retryDelay) {
+	public FlowRetryFunc(int maxNum, int retryDelay) {
 		this.maxNum = maxNum;
 		this.retryDelay = retryDelay;
 	}

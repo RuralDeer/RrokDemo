@@ -1,6 +1,5 @@
 package com.cn.request.model;
 
-import com.cn.request.enums.CacheMode;
 import com.cn.request.enums.DataSource;
 
 /**
@@ -12,20 +11,13 @@ import com.cn.request.enums.DataSource;
  */
 public final class ApiResponse<T> {
 
-	public T obj;
+    public T data;
 
-	public String cacheKey;
+    public DataSource dataSource;
 
-	public CacheMode cacheMode;
+    public ApiResponse(T data, DataSource dataSource) {
+        this.data = data;
+        this.dataSource = dataSource;
 
-	public DataSource dataSource;
-
-
-	public ApiResponse(T obj, String cacheKey, CacheMode cacheMode, DataSource dataSource) {
-		this.obj = obj;
-		this.cacheKey = cacheKey;
-		this.cacheMode = cacheMode;
-		this.dataSource = dataSource;
-
-	}
+    }
 }

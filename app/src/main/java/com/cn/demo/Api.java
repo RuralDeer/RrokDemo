@@ -24,37 +24,24 @@ import retrofit2.http.Query;
  */
 public interface Api {
 
-	String BASE_URL = "http://192.168.1.100:8080/";
+	String BASE_URL = "http://192.168.1.115:8080/";
 
 	@GET("getUsers")
-	Call<List<TestBean>> get(@Query("page") int page, @Query("offeset") int offeset);
-
-	@GET("getUsers")
-	Observable<List<TestBean>> getObs(@Query("page") int page, @Query("offeset") int offeset);
+	Observable<List<TestBean>> get(@Query("page") int page, @Query("offeset") int offeset);
 
 	@FormUrlEncoded
 	@POST("postUsers")
-	Observable<List<TestBean>> postObs(@Field("page") int page, @Field("offeset") int offeset);
-
-	@FormUrlEncoded
-	@POST("postUsers")
-	Call<List<TestBean>> post(@Field("page") int page, @Field("offeset") int offeset);
+	Observable<List<TestBean>> post(@Field("page") int page, @Field("offeset") int offeset);
 
 	@POST("postUsers")
-	Call<List<TestBean>> postBody(@Body String string);
+	Observable<List<TestBean>> postBody(@Body String string);
 
 	@POST("postUsers")
-	Call<List<TestBean>> postBody(@Body RequestBody body);
+	Observable<List<TestBean>> postBody(@Body RequestBody body);
 
-	@GET("getUsers")
-	Call<List<TestBean>> get1(@Query("name") String name);
-
-	@FormUrlEncoded
-	@POST("getUsers")
-	Call<List<TestBean>> post1(@Field("name") String name);
 
 	@GET("getCookie")
-	Call<UserBean> login(@Query("username") String username, @Query("password") String password);
+	Observable<UserBean> login(@Query("username") String username, @Query("password") String password);
 
 
 }

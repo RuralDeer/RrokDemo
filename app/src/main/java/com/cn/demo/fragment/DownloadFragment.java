@@ -14,41 +14,27 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cn.RrokClient;
+import com.cn.HttpClient;
 import com.cn.demo.Api;
 import com.cn.demo.R;
-import com.cn.demo.bean.TestBean;
 import com.cn.demo.events.SendEvent;
 import com.cn.demo.fragment.base.BaseFragment;
 import com.cn.request.call.ApiBaseFileResult;
-import com.cn.request.call.ApiObsResult;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
-import java.util.List;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import retrofit2.Call;
 
 
 public class DownloadFragment extends BaseFragment {
 
 	private TextView messageTv;
 	private ProgressBar progressBar;
-
-	@Override
-	protected Call<List<TestBean>> getCall() {
-		return null;
-	}
-
-	@Override
-	protected ApiObsResult<List<TestBean>> apiObsResult() {
-		return null;
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -83,7 +69,7 @@ public class DownloadFragment extends BaseFragment {
 		String url = Api.BASE_URL + "download";
 		final String path = Environment.getExternalStorageDirectory() + File.separator + "1_test";
 		String fileName = "Navicat_Premium_mac.dmg";
-		RrokClient.download(url, path, fileName)
+		HttpClient.download(url, path, fileName)
 			.enqueue(new ApiBaseFileResult<File>() {
 				@Override
 				public void onDisposable(Disposable disposable) {

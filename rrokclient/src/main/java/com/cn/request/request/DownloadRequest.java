@@ -1,11 +1,11 @@
 package com.cn.request.request;
 
-import com.cn.RrokClient;
+import com.cn.HttpClient;
 import com.cn.request.request.base.BaseApi;
 import com.cn.request.request.base.BaseRequest;
 import com.cn.request.call.ApiBaseFileResult;
 import com.cn.request.func.file.FileConvertFunc;
-import com.cn.request.factory.RxScheduler;
+import com.cn.request.transformer.RxSchedulersTransformer;
 
 import java.io.File;
 
@@ -31,10 +31,10 @@ public class DownloadRequest extends BaseRequest<DownloadRequest> {
 	}
 
 	public void enqueue(final ApiBaseFileResult<File> apiBaseFileResult) {
-		RrokClient.create(BaseApi.class)
+		HttpClient.create(BaseApi.class)
 			.downLoadFile(headers, url, params)
 			.map(new FileConvertFunc(destFileDir, destFileName, apiBaseFileResult))
-			.compose(RxScheduler.<File>Obs_io_main())
+			.compose(RxSchedulersTransformer.<File>Obs_io_main())
 			.subscribe(new Observer<File>() {
 				@Override
 				public void onSubscribe(Disposable d) {

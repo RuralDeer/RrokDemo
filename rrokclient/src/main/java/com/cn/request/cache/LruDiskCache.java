@@ -2,8 +2,7 @@ package com.cn.request.cache;
 
 import android.text.TextUtils;
 
-import com.cn.RrokClient;
-import com.cn.request.factory.ILruCache;
+import com.cn.HttpClient;
 import com.jakewharton.disklrucache.DiskLruCache;
 
 import java.io.File;
@@ -29,7 +28,7 @@ public class LruDiskCache extends ILruCache {
 	private DiskLruCache diskLruCache = null;
 
 	private LruDiskCache() {
-		File cacheDir = RrokClient.getContext().getCacheDir();
+		File cacheDir = HttpClient.getContext().getCacheDir();
 		if (!cacheDir.exists()) {
 			cacheDir.mkdirs();
 		}

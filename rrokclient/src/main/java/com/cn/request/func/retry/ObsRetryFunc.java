@@ -15,7 +15,7 @@ import io.reactivex.functions.Function;
  * <p>
  * author: 鹿文龙
  */
-public class ObsRetryFun implements Function<Observable<? extends Throwable>, Observable<?>> {
+public class ObsRetryFunc implements Function<Observable<? extends Throwable>, Observable<?>> {
 
 	private int maxNum;//最大出错重试次数
 
@@ -23,7 +23,7 @@ public class ObsRetryFun implements Function<Observable<? extends Throwable>, Ob
 
 	private int retryDelay;//重试间隔时间
 
-	public ObsRetryFun(int maxNum, int retryDelay) {
+	public ObsRetryFunc(int maxNum, int retryDelay) {
 		this.maxNum = maxNum;
 		this.retryDelay = retryDelay;
 	}
@@ -34,15 +34,9 @@ public class ObsRetryFun implements Function<Observable<? extends Throwable>, Ob
 			.flatMap(new Function<Throwable, ObservableSource<?>>() {
 				@Override
 				public ObservableSource<?> apply(Throwable throwable) throws Exception {
-
-					Log.e("ObsRetryFun", "1:"+throwable.getMessage());
-
-					Log.d("ObsRetryFun", "retryCount:" + retryCount);
-
 					if (++retryCount <= maxNum) {
 						return Observable.timer(retryDelay * retryCount, TimeUnit.MILLISECONDS);
 					}
-					Log.e("ObsRetryFun", "2:"+throwable.getMessage());
 					return Observable.error(throwable);
 				}
 			});

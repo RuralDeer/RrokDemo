@@ -3,8 +3,6 @@ package com.cn.request.cache;
 import android.text.TextUtils;
 import android.util.LruCache;
 
-import com.cn.request.factory.ILruCache;
-
 /**
  * Date: 2019/7/15
  * <p>

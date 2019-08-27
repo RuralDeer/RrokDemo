@@ -1,7 +1,7 @@
 package com.cn.request.request;
 
 import com.cn.request.call.ApiBaseFileResult;
-import com.cn.request.factory.RxScheduler;
+import com.cn.request.transformer.RxSchedulersTransformer;
 import com.cn.request.func.file.UploadBuilderFunc;
 import com.cn.request.func.file.UploadFunc;
 import com.cn.request.request.base.BaseRequest;
@@ -59,7 +59,7 @@ public class UploadRequest extends BaseRequest<UploadRequest> {
 		Observable.just(fileMap)
 			.map(new UploadBuilderFunc<T>(apiBaseFileResult))
 			.concatMap(new UploadFunc<T>(apiBaseFileResult,this))
-			.compose(RxScheduler.<T>Obs_io_main())
+			.compose(RxSchedulersTransformer.<T>Obs_io_main())
 			.subscribe(new Observer<T>() {
 				@Override
 				public void onSubscribe(Disposable d) {

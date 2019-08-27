@@ -19,7 +19,7 @@ public class HttpTrace {
     private static final int DEBUG = 3;
     private static final int VERBOSE = 2;
 
-    private static String TAG = "RrokClient";
+    private static String TAG = "HttpClient";
 
     /**
      * Log 日志开关

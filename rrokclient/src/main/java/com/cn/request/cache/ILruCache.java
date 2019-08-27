@@ -1,4 +1,4 @@
-package com.cn.request.factory;
+package com.cn.request.cache;
 
 /**
  * Date: 2019/7/15
