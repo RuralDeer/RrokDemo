@@ -38,38 +38,27 @@ public final class MockerHandler<T> implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-
         boolean isMockExist = method.isAnnotationPresent(Mock.class);
-
         //如果注解不存在 正常走流程
         if (!isMockExist) {
             return invoke(method, args);
         }
-
         Mock mock = method.getAnnotation(Mock.class);
-
         //如果mock 设置为false 正常返回
         if (!mock.enable()) {
             return invoke(method, args);
         }
-
-        String baseUrl = mock.baseurl().trim();
-        if (null != baseUrl && baseUrl.length() != 0 && baseUrl.startsWith("http")) {
-            setNewBaseUrl(method, baseUrl);
+        String value = mock.value().trim();
+        //如果http开头 替换成url 正常请求
+        if (value.startsWith("http")) {
+            changeRelativeUrl(method, value);
             return invoke(method, args);
-        } else {
-            String value = mock.value().trim();
-            //如果http开头 替换成url 正常请求
-            if (value.startsWith("http")) {
-                preLoadServiceMethod(method, value);
-                return invoke(method, args);
-            } else if (value.endsWith(".json")) {
-                String mockResponseJson = readAssets(value);
-                Object responseObj = retrofit.nextResponseBodyConverter(null, getReturnTye(method), method.getDeclaredAnnotations()).convert(ResponseBody.create(MediaType.parse("application/json"), mockResponseJson));
-                return (retrofit.nextCallAdapter(null, method.getGenericReturnType(), method.getAnnotations())).adapt(new MockerCall(responseObj));
-            } else { //其他情况正常请求
-                return invoke(method, args);
-            }
+        } else if (value.endsWith(".json")) {
+            String mockResponseJson = readAssets(value);
+            Object responseObj = retrofit.nextResponseBodyConverter(null, getReturnTye(method), method.getDeclaredAnnotations()).convert(ResponseBody.create(MediaType.parse("application/json"), mockResponseJson));
+            return (retrofit.nextCallAdapter(null, method.getGenericReturnType(), method.getAnnotations())).adapt(new MockerCall(responseObj));
+        } else { //其他情况正常请求
+            return invoke(method, args);
         }
     }
 
@@ -85,53 +74,24 @@ public final class MockerHandler<T> implements InvocationHandler {
         return ((ParameterizedType) (method.getGenericReturnType())).getActualTypeArguments()[0];
     }
 
-    //修改url地址
-    private void preLoadServiceMethod(Method method, String relativeUrl) {
-        try {
-            Method loadServiceMethod = retrofit.getClass().getDeclaredMethod("loadServiceMethod", Method.class);
-            loadServiceMethod.setAccessible(true);
-            //获得serviceMethod的值
-            Object serviceMethod = loadServiceMethod.invoke(retrofit, method);
-            //反射修改实体类中的值
-            fixRetrofit240(serviceMethod, relativeUrl);
-            fixRetrofit250(serviceMethod, relativeUrl);
-        } catch (Exception e) {
+    /**
+     * 更换地址
+     * @param method
+     * @param relativeUrl
+     * @throws Exception
+     */
+    private void changeRelativeUrl(Method method, String relativeUrl) throws Exception {
+        Method loadServiceMethod = retrofit.getClass().getDeclaredMethod("loadServiceMethod", Method.class);
+        loadServiceMethod.setAccessible(true);
+        //获得serviceMethod的值
+        Object serviceMethod = loadServiceMethod.invoke(retrofit, method);
 
-        }
-    }
-
-    //针对retrofit 2.4.0版本做适配
-    private void fixRetrofit240(Object serviceMethod, String relativeUrl) {
-        try {
-            Field relativeUrlField = serviceMethod.getClass().getDeclaredField("relativeUrl");
-            relativeUrlField.setAccessible(true);
-            relativeUrlField.set(serviceMethod, relativeUrl);
-        } catch (Exception e) {
-
-        }
-    }
-
-    //针对retrofit 2.5.0版本做适配
-    private void fixRetrofit250(Object serviceMethod, String relativeUrl) {
-        try {
-            Field requestFactoryField = serviceMethod.getClass().getDeclaredField("requestFactory");
-            requestFactoryField.setAccessible(true);
-            Object requestFactory = requestFactoryField.get(serviceMethod);
-
-            Field httpUrlField = requestFactory.getClass().getDeclaredField("baseUrl");
-            httpUrlField.setAccessible(true);
-
-            Field baseUrlField = httpUrlField.getDeclaringClass().getDeclaredField("url");
-            baseUrlField.setAccessible(true);
-            baseUrlField.set(httpUrlField, "http://test");
-
-
-            Field relativeUrlField = requestFactory.getClass().getDeclaredField("relativeUrl");
-            relativeUrlField.setAccessible(true);
-            relativeUrlField.set(requestFactory, relativeUrl);
-        } catch (Exception e) {
-
-        }
+        Field requestFactoryField = serviceMethod.getClass().getDeclaredField("requestFactory");
+        requestFactoryField.setAccessible(true);
+        Object requestFactory = requestFactoryField.get(serviceMethod);
+        Field relativeUrlField = requestFactory.getClass().getDeclaredField("relativeUrl");
+        relativeUrlField.setAccessible(true);
+        relativeUrlField.set(requestFactory, relativeUrl);
     }
 
     //读取文件
@@ -147,40 +107,5 @@ public final class MockerHandler<T> implements InvocationHandler {
 
         }
         return "读取错误，请检查文件名";
-    }
-
-    /**
-     * 替换BaseUrl
-     *
-     * @param newBaseUrl
-     */
-    private void setNewBaseUrl(Method method, String newBaseUrl) {
-        try {
-
-            Method loadServiceMethod = retrofit.getClass().getDeclaredMethod("loadServiceMethod", Method.class);
-            loadServiceMethod.setAccessible(true);
-            //获得serviceMethod的值
-            Object serviceMethod = loadServiceMethod.invoke(retrofit, method);
-
-            Field requestFactoryField = serviceMethod.getClass().getDeclaredField("requestFactory");
-            requestFactoryField.setAccessible(true);
-            Object requestFactory = requestFactoryField.get(serviceMethod);
-
-            Field httpUrlField = requestFactory.getClass().getDeclaredField("baseUrl");
-            httpUrlField.setAccessible(true);
-
-            Log.d("MockerHandler", httpUrlField.getDeclaringClass().getName());
-
-            Field [] fields = httpUrlField.getDeclaringClass().getDeclaredFields();
-            for(int i = 0;i<fields.length;i++){
-                Log.i("MockerHandler", fields[i].getName());
-            }
-
-            Field baseUrlField = httpUrlField.getDeclaringClass().getDeclaredField("url");
-            baseUrlField.setAccessible(true);
-            baseUrlField.set(httpUrlField, newBaseUrl);
-        } catch (Exception e) {
-            Log.e("MockerHandler", e.getMessage());
-        }
     }
 }

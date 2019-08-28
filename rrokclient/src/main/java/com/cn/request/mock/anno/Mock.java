@@ -23,14 +23,7 @@ public @interface Mock {
      * @return default
      */
     String value() default "";
-
-    /**
-     * 新的BaseUrl
-     *
-     * @return default
-     */
-    String baseurl() default "";
-
+    
     /**
      * 是否需要
      *
