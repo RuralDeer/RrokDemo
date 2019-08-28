@@ -7,12 +7,14 @@ import com.cn.request.cookie.SPCookieStore;
 import com.cn.request.factory.RetrofitFactory;
 import com.cn.request.https.HttpsUtils;
 import com.cn.request.interceptors.ParamInterceptor;
+import com.cn.request.mock.MockerHandler;
 import com.cn.request.model.HttpHeaders;
 import com.cn.request.model.HttpParams;
 import com.cn.request.request.DownloadRequest;
 import com.cn.request.request.UploadRequest;
 import com.cn.request.utils.HttpUtils;
 
+import java.lang.reflect.Proxy;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -37,6 +39,7 @@ public class HttpClient {
     private HttpHeaders httpHeaders;               //公共头
     private HttpParams httpParams;                 //公共参数
     private Retrofit retrofit;
+    private boolean needMocker;
 
     private static volatile HttpClient instance;
 
@@ -45,11 +48,11 @@ public class HttpClient {
      *
      * @return
      */
-    public static HttpClient init(Context context, String baseUrl) {
+    public static HttpClient init(Context context, String baseUrl, boolean needMocker) {
         if (instance == null) {
             synchronized (HttpClient.class) {
                 if (instance == null) {
-                    instance = new HttpClient(context, baseUrl);
+                    instance = new HttpClient(context, baseUrl, needMocker);
                 }
             }
         }
@@ -71,9 +74,10 @@ public class HttpClient {
     /**
      * 初始化
      */
-    private HttpClient(Context context, String baseUrl) {
+    private HttpClient(Context context, String baseUrl, boolean needMocker) {
         this.context = context;
         this.mBaseUrl = baseUrl;
+        this.needMocker = needMocker;
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.readTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
         builder.writeTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
@@ -153,7 +157,17 @@ public class HttpClient {
      * @return
      */
     public static <T> T create(Class<T> clz) {
-        return instance.getRetrofit().create(clz);
+        return create(clz, instance.needMocker);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T create(Class<T> clz, boolean needMoker) {
+        Retrofit retrofit = instance.getRetrofit();
+        T api = retrofit.create(clz);
+        if (needMoker) {
+            return (T) Proxy.newProxyInstance(clz.getClassLoader(), new Class<?>[]{clz}, new MockerHandler(retrofit, api));
+        }
+        return api;
     }
 
     /**
@@ -175,6 +189,5 @@ public class HttpClient {
     public static DownloadRequest download(String url, String destFileDir, String destFileName) {
         return new DownloadRequest(url, destFileDir, destFileName);
     }
-
 }
 

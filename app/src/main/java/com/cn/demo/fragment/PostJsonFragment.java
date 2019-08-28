@@ -2,6 +2,7 @@ package com.cn.demo.fragment;
 
 import android.arch.lifecycle.Lifecycle;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,10 @@ import com.cn.demo.events.SendEvent;
 import com.cn.demo.fragment.base.BaseFragment;
 import com.cn.HttpClient;
 import com.cn.request.enums.CacheMode;
+import com.cn.request.enums.DataSource;
+import com.cn.request.model.ApiResponse;
 import com.cn.request.transformer.RxCacheTransformer;
+import com.cn.request.transformer.RxResponseCacheTransformer;
 import com.cn.request.transformer.RxSchedulersTransformer;
 import com.cn.request.utils.GsonUtils;
 import com.uber.autodispose.AutoDispose;
@@ -73,13 +77,19 @@ public class PostJsonFragment extends BaseFragment {
         map.put("offeset", offeset);
 
         HttpClient.create(Api.class).postBody(GsonUtils.formatJson(map))
-                .compose(RxCacheTransformer.<List<TestBean>>obsTransformer(cacheMode))
-                .compose(RxSchedulersTransformer.<List<TestBean>>obsIoMain())
-                .as(AutoDispose.<List<TestBean>>autoDisposable(AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)))
-                .subscribe(new Consumer<List<TestBean>>() {
+                .compose(RxResponseCacheTransformer.<List<TestBean>>obsTransformer(cacheMode))
+                .compose(RxSchedulersTransformer.<ApiResponse<List<TestBean>>>obsIoMain())
+                .as(AutoDispose.<ApiResponse<List<TestBean>>>autoDisposable(AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)))
+                .subscribe(new Consumer<ApiResponse<List<TestBean>>>() {
                     @Override
-                    public void accept(List<TestBean> testBeans) throws Exception {
-                        mNetAdapter.addData(testBeans);
+                    public void accept(ApiResponse<List<TestBean>> listApiResponse) throws Exception {
+                        if (listApiResponse.dataSource == DataSource.CACHE) {
+                            mCacheAdapter.addData(listApiResponse.data);
+                            Log.d("GetFragment", GsonUtils.formatJson(listApiResponse.data));
+                        } else {
+                            mNetAdapter.addData(listApiResponse.data);
+                        }
+
                     }
                 }, new Consumer<Throwable>() {
                     @Override

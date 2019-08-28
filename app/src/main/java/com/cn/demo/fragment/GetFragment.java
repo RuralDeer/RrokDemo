@@ -19,6 +19,7 @@ import com.cn.request.model.ApiResponse;
 import com.cn.request.transformer.RxCacheTransformer;
 import com.cn.request.transformer.RxResponseCacheTransformer;
 import com.cn.request.transformer.RxSchedulersTransformer;
+import com.cn.request.utils.GsonUtils;
 import com.uber.autodispose.AutoDispose;
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider;
 
@@ -76,11 +77,9 @@ public class GetFragment extends BaseFragment {
                 .subscribe(new Consumer<ApiResponse<List<TestBean>>>() {
                     @Override
                     public void accept(ApiResponse<List<TestBean>> listApiResponse) throws Exception {
-
-                        Log.d("GetFragment", "listApiResponse.dataSource:" + listApiResponse.dataSource);
-
                         if (listApiResponse.dataSource == DataSource.CACHE) {
                             mCacheAdapter.addData(listApiResponse.data);
+                            Log.d("GetFragment", GsonUtils.formatJson(listApiResponse.data));
                         } else {
                             mNetAdapter.addData(listApiResponse.data);
                         }

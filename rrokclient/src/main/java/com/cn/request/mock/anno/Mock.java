@@ -1,4 +1,4 @@
-package com.cn.request.anno;
+package com.cn.request.mock.anno;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -18,23 +18,23 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Mock {
     /**
-     * 网络地址
+     * Mock 参数
      *
      * @return default
      */
-    String url() default "";
+    String value() default "";
 
     /**
-     * Json数据
+     * 新的BaseUrl
      *
      * @return default
      */
-    String json() default "";
+    String baseurl() default "";
 
     /**
-     * assets 文件
+     * 是否需要
      *
      * @return default
      */
-    String assets() default "";
+    boolean enable() default true;
 }
