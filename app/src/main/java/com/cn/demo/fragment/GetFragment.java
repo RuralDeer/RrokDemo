@@ -2,6 +2,7 @@ package com.cn.demo.fragment;
 
 import android.arch.lifecycle.Lifecycle;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,14 +70,15 @@ public class GetFragment extends BaseFragment {
     private void request(CacheMode cacheMode) {
 
         HttpClient.create(Api.class).get(page, offeset)
-
                 .compose(RxResponseCacheTransformer.<List<TestBean>>obsTransformer(cacheMode))
-
                 .compose(RxSchedulersTransformer.<ApiResponse<List<TestBean>>>obsIoMain())
                 .as(AutoDispose.<ApiResponse<List<TestBean>>>autoDisposable(AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)))
                 .subscribe(new Consumer<ApiResponse<List<TestBean>>>() {
                     @Override
                     public void accept(ApiResponse<List<TestBean>> listApiResponse) throws Exception {
+
+                        Log.d("GetFragment", "listApiResponse.dataSource:" + listApiResponse.dataSource);
+
                         if (listApiResponse.dataSource == DataSource.CACHE) {
                             mCacheAdapter.addData(listApiResponse.data);
                         } else {
@@ -97,27 +99,25 @@ public class GetFragment extends BaseFragment {
                 });
 
 
-        HttpClient.create(Api.class).get(page, offeset)
-
-                .compose(RxCacheTransformer.<List<TestBean>>obsTransformer(cacheMode))
-
-                .compose(RxSchedulersTransformer.<List<TestBean>>obsIoMain())
-                .as(AutoDispose.<List<TestBean>>autoDisposable(AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)))
-                .subscribe(new Consumer<List<TestBean>>() {
-                    @Override
-                    public void accept(List<TestBean> testBeans) throws Exception {
-                        mNetAdapter.addData(testBeans);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        mErrorTv.setText(throwable.getMessage());
-                    }
-                }, new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        mErrorTv.setText("请求完毕");
-                    }
-                });
+//        HttpClient.create(Api.class).get(page, offeset)
+//                .compose(RxCacheTransformer.<List<TestBean>>obsTransformer(cacheMode))
+//                .compose(RxSchedulersTransformer.<List<TestBean>>obsIoMain())
+//                .as(AutoDispose.<List<TestBean>>autoDisposable(AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)))
+//                .subscribe(new Consumer<List<TestBean>>() {
+//                    @Override
+//                    public void accept(List<TestBean> testBeans) throws Exception {
+//                        mNetAdapter.addData(testBeans);
+//                    }
+//                }, new Consumer<Throwable>() {
+//                    @Override
+//                    public void accept(Throwable throwable) throws Exception {
+//                        mErrorTv.setText(throwable.getMessage());
+//                    }
+//                }, new Action() {
+//                    @Override
+//                    public void run() throws Exception {
+//                        mErrorTv.setText("请求完毕");
+//                    }
+//                });
     }
 }
