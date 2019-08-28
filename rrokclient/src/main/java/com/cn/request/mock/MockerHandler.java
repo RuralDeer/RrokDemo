@@ -1,5 +1,7 @@
 package com.cn.request.mock;
 
+import android.util.Log;
+
 import com.cn.request.mock.anno.Mock;
 
 import java.io.InputStream;
@@ -53,7 +55,7 @@ public final class MockerHandler<T> implements InvocationHandler {
 
         String baseUrl = mock.baseurl().trim();
         if (null != baseUrl && baseUrl.length() != 0 && baseUrl.startsWith("http")) {
-            setNewBaseUrl(baseUrl);
+            setNewBaseUrl(method, baseUrl);
             return invoke(method, args);
         } else {
             String value = mock.value().trim();
@@ -116,10 +118,13 @@ public final class MockerHandler<T> implements InvocationHandler {
             requestFactoryField.setAccessible(true);
             Object requestFactory = requestFactoryField.get(serviceMethod);
 
-//            Field httpUrlField  = requestFactory.getClass().getDeclaredField("baseUrl");
-//            httpUrlField.setAccessible(true);
-//            Object baserUrl = ()
-//
+            Field httpUrlField = requestFactory.getClass().getDeclaredField("baseUrl");
+            httpUrlField.setAccessible(true);
+
+            Field baseUrlField = httpUrlField.getDeclaringClass().getDeclaredField("url");
+            baseUrlField.setAccessible(true);
+            baseUrlField.set(httpUrlField, "http://test");
+
 
             Field relativeUrlField = requestFactory.getClass().getDeclaredField("relativeUrl");
             relativeUrlField.setAccessible(true);
@@ -149,24 +154,33 @@ public final class MockerHandler<T> implements InvocationHandler {
      *
      * @param newBaseUrl
      */
-    private void setNewBaseUrl(String newBaseUrl) {
+    private void setNewBaseUrl(Method method, String newBaseUrl) {
         try {
-            Field baseUrlField = retrofit.getClass().getDeclaredField("baseUrl");
-            baseUrlField.setAccessible(true);
-            baseUrlField.set(retrofit, newBaseUrl);
-            Field serviceMethodCacheField = retrofit.getClass().getDeclaredField("serviceMethodCache");
-            serviceMethodCacheField.setAccessible(true);
-            Map<Method, Object> serviceMethodCache = (Map<Method, Object>) serviceMethodCacheField.get(retrofit);
-            if (null != serviceMethodCache && serviceMethodCache.size() > 0) {
-                for (Map.Entry<Method, Object> methodObjectEntry : serviceMethodCache.entrySet()) {
-                    Class valueClass = methodObjectEntry.getValue().getClass();
-                    baseUrlField = valueClass.getDeclaredField("baseUrl");
-                    baseUrlField.setAccessible(true);
-                    baseUrlField.set(methodObjectEntry.getValue(), newBaseUrl);
-                }
+
+            Method loadServiceMethod = retrofit.getClass().getDeclaredMethod("loadServiceMethod", Method.class);
+            loadServiceMethod.setAccessible(true);
+            //获得serviceMethod的值
+            Object serviceMethod = loadServiceMethod.invoke(retrofit, method);
+
+            Field requestFactoryField = serviceMethod.getClass().getDeclaredField("requestFactory");
+            requestFactoryField.setAccessible(true);
+            Object requestFactory = requestFactoryField.get(serviceMethod);
+
+            Field httpUrlField = requestFactory.getClass().getDeclaredField("baseUrl");
+            httpUrlField.setAccessible(true);
+
+            Log.d("MockerHandler", httpUrlField.getDeclaringClass().getName());
+
+            Field [] fields = httpUrlField.getDeclaringClass().getDeclaredFields();
+            for(int i = 0;i<fields.length;i++){
+                Log.i("MockerHandler", fields[i].getName());
             }
+
+            Field baseUrlField = httpUrlField.getDeclaringClass().getDeclaredField("url");
+            baseUrlField.setAccessible(true);
+            baseUrlField.set(httpUrlField, newBaseUrl);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("MockerHandler", e.getMessage());
         }
     }
 }
