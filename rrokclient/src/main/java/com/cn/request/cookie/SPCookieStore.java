@@ -24,7 +24,7 @@ import okhttp3.HttpUrl;
  */
 public class SPCookieStore implements CookieStore {
 
-	private static final String COOKIE_PREFS = "okgo_cookie";           //cookie使用prefs保存
+	private static final String COOKIE_PREFS = "http_cookie";           //cookie使用prefs保存
 	private static final String COOKIE_NAME_PREFIX = "cookie_";         //cookie持久化的统一前缀
 
 	/**
@@ -117,7 +117,7 @@ public class SPCookieStore implements CookieStore {
 	@Override
 	public synchronized List<Cookie> loadCookie(HttpUrl url) {
 		List<Cookie> ret = new ArrayList<>();
-		if (!cookies.containsKey(url.host())) return ret;
+		if (!cookies.containsKey(url.host())) {return ret;}
 
 		Collection<Cookie> urlCookies = cookies.get(url.host()).values();
 		for (Cookie cookie : urlCookies) {
@@ -135,9 +135,9 @@ public class SPCookieStore implements CookieStore {
 	 */
 	@Override
 	public synchronized boolean removeCookie(HttpUrl url, Cookie cookie) {
-		if (!cookies.containsKey(url.host())) return false;
+		if (!cookies.containsKey(url.host())) {return false;}
 		String cookieToken = getCookieToken(cookie);
-		if (!cookies.get(url.host()).containsKey(cookieToken)) return false;
+		if (!cookies.get(url.host()).containsKey(cookieToken)) {return false;}
 
 		//内存移除
 		cookies.get(url.host()).remove(cookieToken);
@@ -153,7 +153,7 @@ public class SPCookieStore implements CookieStore {
 
 	@Override
 	public synchronized boolean removeCookie(HttpUrl url) {
-		if (!cookies.containsKey(url.host())) return false;
+		if (!cookies.containsKey(url.host())) {return false;}
 
 		//内存移除
 		ConcurrentHashMap<String, Cookie> urlCookie = cookies.remove(url.host());
@@ -198,7 +198,7 @@ public class SPCookieStore implements CookieStore {
 	public synchronized List<Cookie> getCookie(HttpUrl url) {
 		List<Cookie> ret = new ArrayList<>();
 		Map<String, Cookie> mapCookie = cookies.get(url.host());
-		if (mapCookie != null) ret.addAll(mapCookie.values());
+		if (mapCookie != null) {ret.addAll(mapCookie.values());}
 		return ret;
 	}
 }

@@ -1,4 +1,4 @@
-package com.cn.request.factory;
+package com.cn.request.transformer;
 
 import org.reactivestreams.Publisher;
 
@@ -20,7 +20,7 @@ import io.reactivex.schedulers.Schedulers;
  * <p>
  * description：RXjava 线程调度
  */
-public class RxScheduler {
+public class RxSchedulersTransformer {
 	/**
 	 * 统一线程处理
 	 * <p>
@@ -32,7 +32,7 @@ public class RxScheduler {
 	 * https://www.jianshu.com/p/ff8167c1d191/
 	 */
 
-	public static <T> FlowableTransformer<T, T> Flo_io_main() {
+	public static <T> FlowableTransformer<T, T> floIoMain() {
 		return new FlowableTransformer<T, T>() {
 			@Override
 			public Publisher<T> apply(@NonNull Flowable<T> upstream) {
@@ -49,7 +49,7 @@ public class RxScheduler {
 	 * @param <T> 指定的泛型类型
 	 * @return ObservableTransformer
 	 */
-	public static <T> ObservableTransformer<T, T> Obs_io_main() {
+	public static <T> ObservableTransformer<T, T> obsIoMain() {
 		return new ObservableTransformer<T, T>() {
 			@Override
 			public ObservableSource<T> apply(Observable<T> upstream) {

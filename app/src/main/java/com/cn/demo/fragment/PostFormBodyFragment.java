@@ -1,5 +1,6 @@
 package com.cn.demo.fragment;
 
+import android.arch.lifecycle.Lifecycle;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,30 +11,22 @@ import com.cn.demo.R;
 import com.cn.demo.bean.TestBean;
 import com.cn.demo.events.SendEvent;
 import com.cn.demo.fragment.base.BaseFragment;
-import com.cn.RrokClient;
-import com.cn.request.call.ApiObsResult;
-import com.cn.request.enums.DataSource;
-import com.cn.request.model.ApiResponse;
+import com.cn.HttpClient;
+import com.cn.request.enums.CacheMode;
+import com.cn.request.transformer.RxCacheTransformer;
+import com.cn.request.transformer.RxSchedulersTransformer;
+import com.uber.autodispose.AutoDispose;
+import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
-import io.reactivex.disposables.Disposable;
-import retrofit2.Call;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
 
 public class PostFormBodyFragment extends BaseFragment {
-
-	@Override
-	protected Call<List<TestBean>> getCall() {
-		return RrokClient.create(Api.class).post(page, offeset);
-	}
-
-	@Override
-	protected ApiObsResult<List<TestBean>> apiObsResult() {
-		return apiObsResult;
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,46 +46,43 @@ public class PostFormBodyFragment extends BaseFragment {
 		mCacheAdapter.clear();
 		switch (event.position) {
 			case 0:
-				req0();
+				request(CacheMode.NONE_CACHE);
 				break;
 			case 1:
-				req1();
+				request(CacheMode.READ_CACHE_THEN_CACHE_NET_REQUEST);
 				break;
 			case 2:
-				req2();
+				request(CacheMode.READ_CACHE_THEN_NET_REQUEST);
 				break;
 			case 3:
-				req3();
+				request(CacheMode.NET_REQUEST_ERROR_THEN_READ_CACHE);
 				break;
 			case 4:
-				req4();
+				request(CacheMode.READ_CACHE_ERROR_THEN_NET_REQUEST);
 				break;
 		}
 	}
 
-	private ApiObsResult<List<TestBean>> apiObsResult = new ApiObsResult<List<TestBean>>() {
-		@Override
-		public void onDisposable(Disposable disposable) {
-
-		}
-
-		@Override
-		public void onSuccess(ApiResponse<List<TestBean>> apiResponse) {
-			if (apiResponse.dataSource == DataSource.NET) {
-				mNetAdapter.addData(apiResponse.obj);
-			} else {
-				mCacheAdapter.addData(apiResponse.obj);
-			}
-		}
-
-		@Override
-		public void onFailure(Throwable throwable) {
-			mErrorTv.setText(throwable.getMessage());
-		}
-
-		@Override
-		public void onComplete() {
-			mErrorTv.setText("请求完毕");
-		}
-	};
+	private void request(CacheMode cacheMode) {
+		HttpClient.create(Api.class).post(page, offeset)
+				.compose(RxCacheTransformer.<List<TestBean>>obsTransformer(cacheMode))
+				.compose(RxSchedulersTransformer.<List<TestBean>>obsIoMain())
+				.as(AutoDispose.<List<TestBean>>autoDisposable(AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)))
+				.subscribe(new Consumer<List<TestBean>>() {
+					@Override
+					public void accept(List<TestBean> testBeans) throws Exception {
+						mNetAdapter.addData(testBeans);
+					}
+				}, new Consumer<Throwable>() {
+					@Override
+					public void accept(Throwable throwable) throws Exception {
+						mErrorTv.setText(throwable.getMessage());
+					}
+				}, new Action() {
+					@Override
+					public void run() throws Exception {
+						mErrorTv.setText("请求完毕");
+					}
+				});
+	}
 }

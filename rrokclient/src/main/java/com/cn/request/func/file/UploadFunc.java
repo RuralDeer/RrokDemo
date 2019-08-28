@@ -1,6 +1,6 @@
 package com.cn.request.func.file;
 
-import com.cn.RrokClient;
+import com.cn.HttpClient;
 import com.cn.request.call.ApiBaseFileResult;
 import com.cn.request.request.base.BaseApi;
 import com.cn.request.request.base.BaseRequest;
@@ -30,7 +30,7 @@ public class UploadFunc<T> implements Function<MultipartBody.Builder, Observable
 	@Override
 	@SuppressWarnings("unchecked")
 	public Observable<T> apply(MultipartBody.Builder builder) throws Exception {
-		return RrokClient.create(BaseApi.class)
+		return HttpClient.create(BaseApi.class)
 			.uploadFile(request.headers, request.url, request.params, builder.build().parts())
 			.map(new JsonConvertFunc<T>(apiBaseFileResult.getClass()));
 	}

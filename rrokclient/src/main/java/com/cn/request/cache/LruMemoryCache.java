@@ -3,8 +3,6 @@ package com.cn.request.cache;
 import android.text.TextUtils;
 import android.util.LruCache;
 
-import com.cn.request.factory.ILruCache;
-
 /**
  * Date: 2019/7/15
  * <p>
@@ -28,7 +26,7 @@ public class LruMemoryCache extends ILruCache {
 
 	@Override
 	public <T> void put(String key, T value) {
-		if (TextUtils.isEmpty(key) || null == value) return;
+		if (TextUtils.isEmpty(key) || null == value) {return;}
 		this.cache.put(key, value);
 	}
 

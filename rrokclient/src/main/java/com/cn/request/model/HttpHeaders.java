@@ -20,7 +20,7 @@ public class HttpHeaders implements Serializable {
     }
 
     public void put(HttpHeaders httpParams) {
-        if (null == httpParams || null == httpParams.headers) return;
+        if (null == httpParams || null == httpParams.headers) {return;}
         for (Map.Entry<String, String> entry : httpParams.headers.entrySet()) {
             headers.put(entry.getKey(), entry.getValue());
         }

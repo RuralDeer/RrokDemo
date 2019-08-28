@@ -12,17 +12,15 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.cn.RrokClient;
+import com.cn.HttpClient;
 import com.cn.demo.Api;
 import com.cn.demo.R;
 import com.cn.demo.adapter.FullyGridLayoutManager;
 import com.cn.demo.adapter.GridImageAdapter;
-import com.cn.demo.bean.TestBean;
 import com.cn.demo.bean.UploadBean;
 import com.cn.demo.events.SendEvent;
 import com.cn.demo.fragment.base.BaseFragment;
 import com.cn.request.call.ApiBaseFileResult;
-import com.cn.request.call.ApiObsResult;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -37,7 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.disposables.Disposable;
-import retrofit2.Call;
 
 public class UploadFragment extends BaseFragment {
 
@@ -49,16 +46,6 @@ public class UploadFragment extends BaseFragment {
 	private ProgressBar progressBar2;
 	private int maxSelectNum = 3;
 	private RxPermissions rxPermissions;
-
-	@Override
-	protected Call<List<TestBean>> getCall() {
-		return null;
-	}
-
-	@Override
-	protected ApiObsResult<List<TestBean>> apiObsResult() {
-		return null;
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -154,7 +141,7 @@ public class UploadFragment extends BaseFragment {
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onSendEvent(SendEvent event) {
 
-		RrokClient.upload(Api.BASE_URL + "upload")
+		HttpClient.upload(Api.BASE_URL + "upload")
 			.param("name", "张三")
 			.file("file", new File(selectList.get(0).getPath()))
 			.file("file2", new File(selectList.get(1).getPath()))

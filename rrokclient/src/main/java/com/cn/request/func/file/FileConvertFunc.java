@@ -57,12 +57,12 @@ public class FileConvertFunc implements Function<ResponseBody, File> {
 
 		} finally {
 			try {
-				if (is != null) is.close();
+				if (is != null) {is.close();}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			try {
-				if (fos != null) fos.close();
+				if (fos != null) {fos.close();}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

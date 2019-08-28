@@ -2,8 +2,8 @@ package com.cn.demo;
 
 import android.app.Application;
 
+import com.cn.HttpClient;
 import com.cn.demo.gson.CustGsonConverterFactory;
-import com.cn.RrokClient;
 import com.cn.request.model.HttpHeaders;
 import com.cn.request.model.HttpParams;
 
@@ -29,7 +29,7 @@ public class App extends Application {
 		httpParams.put("key-2", "param-2");
 		httpParams.put("key-3", "param-3");
 
-		RrokClient
+		HttpClient
 			.init(this, Api.BASE_URL)
 			.setHttpHeaders(httpHeaders)
 			.setHttpParams(httpParams)

@@ -8,14 +8,8 @@ import android.widget.TextView;
 
 import com.cn.demo.R;
 import com.cn.demo.adapter.DataAdapter;
-import com.cn.demo.bean.TestBean;
-import com.cn.RrokClient;
-import com.cn.request.call.ApiObsResult;
-import com.cn.request.enums.CacheMode;
 
 import org.greenrobot.eventbus.EventBus;
-
-import java.util.List;
 
 /**
  * Created by luwenlong on 2017/8/29.
@@ -33,10 +27,6 @@ public abstract class BaseFragment extends Fragment {
 	protected TextView mErrorTv;
 	protected DataAdapter mNetAdapter;
 	protected DataAdapter mCacheAdapter;
-
-	protected abstract retrofit2.Call<List<TestBean>> getCall();
-
-	protected abstract ApiObsResult<List<TestBean>> apiObsResult();
 
 
 	protected void init(View view) {
@@ -63,55 +53,6 @@ public abstract class BaseFragment extends Fragment {
 		} else {
 			EventBus.getDefault().unregister(this);
 		}
-	}
-
-	/**
-	 * 无缓存
-	 */
-	protected void req0() {
-		RrokClient.sendByObservable(getCall())
-			.setCacheMode(CacheMode.NONE_CACHE)
-			.setRetry(retryNum,retryDelay)
-			.enqueue(apiObsResult());
-	}
-
-	/**
-	 * 只要缓存
-	 */
-	protected void req1() {
-		RrokClient.sendByObservable(getCall())
-			.setCacheMode(CacheMode.ONLY_USR_CACHE)
-			.enqueue(apiObsResult());
-	}
-
-	/**
-	 * 缓存+网络
-	 */
-	protected void req2() {
-		RrokClient.sendByObservable(getCall())
-			.setCacheMode(CacheMode.USR_CACHE_NETWORK)
-			.setRetry(retryNum,retryDelay)
-			.enqueue(apiObsResult());
-	}
-
-	/**
-	 * 网络错误+缓存
-	 */
-	protected void req3() {
-		RrokClient.sendByObservable(getCall())
-			.setCacheMode(CacheMode.NETWORK_ERROR_USE_CACHE)
-			.setRetry(retryNum,retryDelay)
-			.enqueue(apiObsResult());
-	}
-
-	/**
-	 * 缓存错误+网络
-	 */
-	protected void req4() {
-		RrokClient.sendByObservable(getCall())
-			.setCacheMode(CacheMode.NOT_CACHE_USE_NETWORK)
-			.setRetry(retryNum,retryDelay)
-			.enqueue(apiObsResult());
 	}
 
 }

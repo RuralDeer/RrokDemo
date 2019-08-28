@@ -19,7 +19,7 @@ public class HttpTrace {
     private static final int DEBUG = 3;
     private static final int VERBOSE = 2;
 
-    private static String TAG = "RrokClient";
+    private static String TAG = "HttpClient";
 
     /**
      * Log 日志开关
@@ -63,7 +63,7 @@ public class HttpTrace {
     }
 
     public static void printStackTrace(Throwable t) {
-        if (isLogEnable && t != null) t.printStackTrace();
+        if (isLogEnable && t != null) {t.printStackTrace();}
     }
 
     public static void trace(String tag, String message, int level) {
