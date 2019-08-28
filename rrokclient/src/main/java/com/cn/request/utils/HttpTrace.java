@@ -63,7 +63,7 @@ public class HttpTrace {
     }
 
     public static void printStackTrace(Throwable t) {
-        if (isLogEnable && t != null) t.printStackTrace();
+        if (isLogEnable && t != null) {t.printStackTrace();}
     }
 
     public static void trace(String tag, String message, int level) {

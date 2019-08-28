@@ -74,7 +74,7 @@ public class PostJsonFragment extends BaseFragment {
 
         HttpClient.create(Api.class).postBody(GsonUtils.formatJson(map))
                 .compose(RxCacheTransformer.<List<TestBean>>obsTransformer(cacheMode))
-                .compose(RxSchedulersTransformer.<List<TestBean>>Obs_io_main())
+                .compose(RxSchedulersTransformer.<List<TestBean>>obsIoMain())
                 .as(AutoDispose.<List<TestBean>>autoDisposable(AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)))
                 .subscribe(new Consumer<List<TestBean>>() {
                     @Override

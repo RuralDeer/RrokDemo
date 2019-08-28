@@ -9,8 +9,15 @@ package com.cn.request.utils;
  */
 public enum HttpStatus {
 
+	/**
+	 * 不缓存数据
+	 */
 	NO_CACHE_NOT_RETURN("Do not return empty cache"),
 
+
+	/**
+	 * 没有缓存
+	 */
 	NO_CACHE("cache empty"),
 
 	/**

@@ -39,7 +39,7 @@ public class ParamInterceptor implements Interceptor {
 	 */
 	private Request addHeaders(Request request) {
 		HttpHeaders httpHeaders = HttpClient.getInstance().getHttpHeaders();
-		if (null == httpHeaders || null == httpHeaders.getHeaders()) return request;
+		if (null == httpHeaders || null == httpHeaders.getHeaders()) {return request;}
 		Request.Builder builder = request.newBuilder();
 		for (Map.Entry<String, String> entry : httpHeaders.getHeaders().entrySet()) {
 			builder.addHeader(entry.getKey(), entry.getValue());
@@ -56,7 +56,7 @@ public class ParamInterceptor implements Interceptor {
 	 */
 	private Request addParams(Request request) {
 		HttpParams httpParams = HttpClient.getInstance().getHttpParams();
-		if (null == httpParams || null == httpParams.getParams()) return request;
+		if (null == httpParams || null == httpParams.getParams()) {return request;}
 		IParams params = ParamsFactory.params(request, httpParams);
 		return params.request();
 	}

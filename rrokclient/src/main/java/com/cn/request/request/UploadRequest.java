@@ -59,7 +59,7 @@ public class UploadRequest extends BaseRequest<UploadRequest> {
 		Observable.just(fileMap)
 			.map(new UploadBuilderFunc<T>(apiBaseFileResult))
 			.concatMap(new UploadFunc<T>(apiBaseFileResult,this))
-			.compose(RxSchedulersTransformer.<T>Obs_io_main())
+			.compose(RxSchedulersTransformer.<T>obsIoMain())
 			.subscribe(new Observer<T>() {
 				@Override
 				public void onSubscribe(Disposable d) {

@@ -23,14 +23,14 @@ public class RxFlowRequest<T> extends IRxRequest<Flowable<T>> {
     public Flowable<T> onlyNetRequest() {
         return upstream
                 .map(new NetResultFunc<T>(request))
-                .compose(RxSchedulersTransformer.<T>Flo_io_main());
+                .compose(RxSchedulersTransformer.<T>floIoMain());
     }
 
     @Override
     public Flowable<T> onlyReadCache() {
         return Flowable.just(HttpUtils.getCacheKey(request))
                 .map(new CacheResultFunc<T>())
-                .compose(RxSchedulersTransformer.<T>Flo_io_main());
+                .compose(RxSchedulersTransformer.<T>floIoMain());
     }
 
     @Override
@@ -38,7 +38,7 @@ public class RxFlowRequest<T> extends IRxRequest<Flowable<T>> {
     public Flowable<T> readCacheThenCacheNetRequest() {
         return Flowable
                 .concatArrayDelayError(onlyReadCache(), onlyNetRequest().filter(new NetResponsFilter<T>()))
-                .compose(RxSchedulersTransformer.<T>Flo_io_main());
+                .compose(RxSchedulersTransformer.<T>floIoMain());
     }
 
     @Override
@@ -47,7 +47,7 @@ public class RxFlowRequest<T> extends IRxRequest<Flowable<T>> {
         return Flowable
                 .concatArrayDelayError(onlyReadCache(), onlyNetRequest())
                 .onErrorResumeNext(onlyNetRequest())  //当没有缓存的时候请求网络
-                .compose(RxSchedulersTransformer.<T>Flo_io_main());
+                .compose(RxSchedulersTransformer.<T>floIoMain());
     }
 
     @Override
@@ -55,13 +55,13 @@ public class RxFlowRequest<T> extends IRxRequest<Flowable<T>> {
     public Flowable<T> readCacheErrorThenNetRequest() {
         return onlyReadCache()
                 .onErrorResumeNext(onlyNetRequest())
-                .compose(RxSchedulersTransformer.<T>Flo_io_main());
+                .compose(RxSchedulersTransformer.<T>floIoMain());
     }
 
     @Override
     public Flowable<T> netRequestErrorThenReadCache() {
         return onlyNetRequest()
                 .onErrorResumeNext(onlyReadCache())
-                .compose(RxSchedulersTransformer.<T>Flo_io_main());
+                .compose(RxSchedulersTransformer.<T>floIoMain());
     }
 }

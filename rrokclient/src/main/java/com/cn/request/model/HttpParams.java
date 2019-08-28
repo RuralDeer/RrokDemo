@@ -20,7 +20,7 @@ public class HttpParams implements Serializable {
     }
 
     public void put(HttpParams httpParams) {
-        if (null == httpParams || null == httpParams.params) return;
+        if (null == httpParams || null == httpParams.params) {return;}
         for (Map.Entry<String, String> entry : httpParams.params.entrySet()) {
             params.put(entry.getKey(), entry.getValue());
         }

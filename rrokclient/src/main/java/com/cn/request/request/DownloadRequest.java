@@ -34,7 +34,7 @@ public class DownloadRequest extends BaseRequest<DownloadRequest> {
 		HttpClient.create(BaseApi.class)
 			.downLoadFile(headers, url, params)
 			.map(new FileConvertFunc(destFileDir, destFileName, apiBaseFileResult))
-			.compose(RxSchedulersTransformer.<File>Obs_io_main())
+			.compose(RxSchedulersTransformer.<File>obsIoMain())
 			.subscribe(new Observer<File>() {
 				@Override
 				public void onSubscribe(Disposable d) {

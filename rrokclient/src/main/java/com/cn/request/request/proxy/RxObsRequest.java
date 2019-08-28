@@ -9,7 +9,6 @@ import com.cn.request.transformer.RxSchedulersTransformer;
 import com.cn.request.utils.HttpUtils;
 
 import io.reactivex.Observable;
-import io.reactivex.functions.Predicate;
 
 public class RxObsRequest<T> extends IRxRequest<Observable<T>> {
 
@@ -24,14 +23,14 @@ public class RxObsRequest<T> extends IRxRequest<Observable<T>> {
     public Observable<T> onlyNetRequest() {
         return upstream
                 .map(new NetResultFunc<T>(request))
-                .compose(RxSchedulersTransformer.<T>Obs_io_main());
+                .compose(RxSchedulersTransformer.<T>obsIoMain());
     }
 
     @Override
     public Observable<T> onlyReadCache() {
         return Observable.just(HttpUtils.getCacheKey(request))
                 .map(new CacheResultFunc<T>())
-                .compose(RxSchedulersTransformer.<T>Obs_io_main());
+                .compose(RxSchedulersTransformer.<T>obsIoMain());
     }
 
     @Override
@@ -39,7 +38,7 @@ public class RxObsRequest<T> extends IRxRequest<Observable<T>> {
     public Observable<T> readCacheThenCacheNetRequest() {
         return Observable
                 .concatArrayDelayError(onlyReadCache(), onlyNetRequest().filter(new NetResponsFilter<T>()))
-                .compose(RxSchedulersTransformer.<T>Obs_io_main());
+                .compose(RxSchedulersTransformer.<T>obsIoMain());
     }
 
     @Override
@@ -48,7 +47,7 @@ public class RxObsRequest<T> extends IRxRequest<Observable<T>> {
         return Observable
                 .concatArrayDelayError(onlyReadCache(), onlyNetRequest())
                 .onErrorResumeNext(onlyNetRequest())//当没有缓存的时候请求网络
-                .compose(RxSchedulersTransformer.<T>Obs_io_main());
+                .compose(RxSchedulersTransformer.<T>obsIoMain());
     }
 
     @Override
@@ -56,13 +55,13 @@ public class RxObsRequest<T> extends IRxRequest<Observable<T>> {
     public Observable<T> readCacheErrorThenNetRequest() {
         return onlyReadCache()
                 .onErrorResumeNext(onlyNetRequest())
-                .compose(RxSchedulersTransformer.<T>Obs_io_main());
+                .compose(RxSchedulersTransformer.<T>obsIoMain());
     }
 
     @Override
     public Observable<T> netRequestErrorThenReadCache() {
         return onlyNetRequest()
                 .onErrorResumeNext(onlyReadCache())
-                .compose(RxSchedulersTransformer.<T>Obs_io_main());
+                .compose(RxSchedulersTransformer.<T>obsIoMain());
     }
 }

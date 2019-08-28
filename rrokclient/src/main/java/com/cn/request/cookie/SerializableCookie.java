@@ -107,7 +107,7 @@ public class SerializableCookie implements Serializable {
 	 * @return 序列化之后的string
 	 */
 	public static String encodeCookie(String host, Cookie cookie) {
-		if (cookie == null) return null;
+		if (cookie == null) {return null;}
 		byte[] cookieBytes = cookieToBytes(host, cookie);
 		return byteArrayToHexString(cookieBytes);
 	}
@@ -185,13 +185,13 @@ public class SerializableCookie implements Serializable {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o) {return true;}
+		if (o == null || getClass() != o.getClass()) {return false;}
 
 		SerializableCookie that = (SerializableCookie) o;
 
-		if (host != null ? !host.equals(that.host) : that.host != null) return false;
-		if (name != null ? !name.equals(that.name) : that.name != null) return false;
+		if (host != null ? !host.equals(that.host) : that.host != null) {return false;}
+		if (name != null ? !name.equals(that.name) : that.name != null) {return false;}
 		return domain != null ? domain.equals(that.domain) : that.domain == null;
 	}
 

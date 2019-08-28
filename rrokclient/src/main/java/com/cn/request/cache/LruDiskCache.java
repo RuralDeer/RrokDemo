@@ -45,7 +45,7 @@ public class LruDiskCache extends ILruCache {
 
 	@Override
 	public <T> void put(String key, T value) {
-		if (TextUtils.isEmpty(key) || null == value) return;
+		if (TextUtils.isEmpty(key) || null == value) {return;}
 		try {
 			DiskLruCache.Editor editor = diskLruCache.edit(key);
 			OutputStream outputStream = editor.newOutputStream(0);

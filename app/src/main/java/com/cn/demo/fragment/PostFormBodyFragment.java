@@ -66,7 +66,7 @@ public class PostFormBodyFragment extends BaseFragment {
 	private void request(CacheMode cacheMode) {
 		HttpClient.create(Api.class).post(page, offeset)
 				.compose(RxCacheTransformer.<List<TestBean>>obsTransformer(cacheMode))
-				.compose(RxSchedulersTransformer.<List<TestBean>>Obs_io_main())
+				.compose(RxSchedulersTransformer.<List<TestBean>>obsIoMain())
 				.as(AutoDispose.<List<TestBean>>autoDisposable(AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)))
 				.subscribe(new Consumer<List<TestBean>>() {
 					@Override
