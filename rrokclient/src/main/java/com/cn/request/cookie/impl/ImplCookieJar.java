@@ -34,7 +34,7 @@ public class ImplCookieJar implements CookieJar {
 	private IHtppCookieStore htppCookieStore;
 
 	public ImplCookieJar(IHtppCookieStore htppCookieStore) {
-		CookieManager.init(htppCookieStore);
+		CookieManager.getInstance().setHtppCookieStore(htppCookieStore);
 		if (htppCookieStore == null) {
 			throw new IllegalArgumentException("IHtppCookieStore can not be null!");
 		}

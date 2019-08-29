@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.cn.request.cookie.CookieManager;
 import com.cn.request.cookie.interfaces.IHtppCookieStore;
 
 import java.util.ArrayList;
@@ -26,9 +27,6 @@ import okhttp3.HttpUrl;
  */
 public class SharedCookieStore implements IHtppCookieStore {
 
-	private static final String COOKIE_PREFS = "http_cookie";           //cookie使用prefs保存
-	private static final String COOKIE_NAME_PREFIX = "cookie_";         //cookie持久化的统一前缀
-
 	/**
 	 * 数据结构如下
 	 * Url.host -> cookieToken1,cookieToken2,cookieToken3
@@ -38,20 +36,21 @@ public class SharedCookieStore implements IHtppCookieStore {
 	 */
 	private final Map<String, ConcurrentHashMap<String, Cookie>> cookies;
 	private final SharedPreferences cookiePrefs;
+	private CookieManager cookieManager = CookieManager.getInstance();
 
 	public SharedCookieStore(Context context) {
-		cookiePrefs = context.getSharedPreferences(COOKIE_PREFS, Context.MODE_PRIVATE);
+		cookiePrefs = context.getSharedPreferences(cookieManager.getCookiePrefsName(), Context.MODE_PRIVATE);
 		cookies = new HashMap<>();
 
 		//将持久化的cookies缓存到内存中,数据结构为 Map<Url.host, Map<CookieToken, Cookie>>
 		Map<String, ?> prefsMap = cookiePrefs.getAll();
 		for (Map.Entry<String, ?> entry : prefsMap.entrySet()) {
-			if ((entry.getValue()) != null && !entry.getKey().startsWith(COOKIE_NAME_PREFIX)) {
+			if ((entry.getValue()) != null && !entry.getKey().startsWith(cookieManager.getCookieNamePrefix())) {
 				//获取url对应的所有cookie的key,用","分割
 				String[] cookieNames = TextUtils.split((String) entry.getValue(), ",");
 				for (String name : cookieNames) {
 					//根据对应cookie的Key,从xml中获取cookie的真实值
-					String encodedCookie = cookiePrefs.getString(COOKIE_NAME_PREFIX + name, null);
+					String encodedCookie = cookiePrefs.getString(cookieManager.getCookieNamePrefix() + name, null);
 					if (encodedCookie != null) {
 						Cookie decodedCookie = SerializableCookie.decodeCookie(encodedCookie);
 						if (decodedCookie != null) {
@@ -109,7 +108,7 @@ public class SharedCookieStore implements IHtppCookieStore {
 		//文件缓存
 		SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
 		prefsWriter.putString(url.host(), TextUtils.join(",", cookies.get(url.host()).keySet()));
-		prefsWriter.putString(COOKIE_NAME_PREFIX + cookieToken, SerializableCookie.encodeCookie(url.host(), cookie));
+		prefsWriter.putString(cookieManager.getCookieNamePrefix() + cookieToken, SerializableCookie.encodeCookie(url.host(), cookie));
 		prefsWriter.apply();
 	}
 
@@ -145,8 +144,8 @@ public class SharedCookieStore implements IHtppCookieStore {
 		cookies.get(url.host()).remove(cookieToken);
 		//文件移除
 		SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
-		if (cookiePrefs.contains(COOKIE_NAME_PREFIX + cookieToken)) {
-			prefsWriter.remove(COOKIE_NAME_PREFIX + cookieToken);
+		if (cookiePrefs.contains(cookieManager.getCookieNamePrefix() + cookieToken)) {
+			prefsWriter.remove(cookieManager.getCookieNamePrefix() + cookieToken);
 		}
 		prefsWriter.putString(url.host(), TextUtils.join(",", cookies.get(url.host()).keySet()));
 		prefsWriter.apply();
@@ -163,8 +162,8 @@ public class SharedCookieStore implements IHtppCookieStore {
 		Set<String> cookieTokens = urlCookie.keySet();
 		SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
 		for (String cookieToken : cookieTokens) {
-			if (cookiePrefs.contains(COOKIE_NAME_PREFIX + cookieToken)) {
-				prefsWriter.remove(COOKIE_NAME_PREFIX + cookieToken);
+			if (cookiePrefs.contains(cookieManager.getCookieNamePrefix() + cookieToken)) {
+				prefsWriter.remove(cookieManager.getCookieNamePrefix() + cookieToken);
 			}
 		}
 		prefsWriter.remove(url.host());

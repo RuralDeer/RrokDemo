@@ -1,7 +1,9 @@
 package com.cn.request.cookie;
 
-import com.cn.request.cookie.impl.ImplCookieJar;
+import android.text.TextUtils;
+
 import com.cn.request.cookie.interfaces.IHtppCookieStore;
+import com.cn.request.utils.HttpUtils;
 
 import java.util.List;
 
@@ -13,28 +15,49 @@ import okhttp3.HttpUrl;
  */
 public class CookieManager {
 
+    private static final String COOKIE_PREFS_NAME = "http_cookie";       //cookie使用prefs保存
+    private static final String COOKIE_NAME_PREFIX = "cookie_";         //cookie持久化的统一前缀
+
+    private static final String CookieManagerIsNull = "Please initialize Your \"CookieManager\" in Application before use";
+    private static final String IHtppCookieStoreIsNull = "Please setHtppCookieStore Your \"IHtppCookieStore\" in CookieJar before use";
+
+
+    private String cookiePrefsName = COOKIE_PREFS_NAME;
+    private String cookieNamePrefix = COOKIE_NAME_PREFIX;
+    private IHtppCookieStore htppCookieStore;
+
     private static volatile CookieManager instance;
 
     public static CookieManager getInstance() {
         if (instance == null) {
-            throw new RuntimeException("Please initialize Your \"CookieManager\" in ImplCookieJar before use");
+            throw new RuntimeException(CookieManagerIsNull);
         }
         return instance;
     }
 
-    public static void init(IHtppCookieStore htppCookieStore) {
+
+    /**
+     * 初始化 cookie SharedPreferences
+     *
+     * @param prefsName
+     * @param namePrefix
+     */
+    public static void init(String prefsName, String namePrefix) {
         if (instance == null) {
             synchronized (CookieManager.class) {
                 if (instance == null) {
-                    instance = new CookieManager(htppCookieStore);
+                    instance = new CookieManager(prefsName, namePrefix);
                 }
             }
         }
     }
 
-    private IHtppCookieStore htppCookieStore;
+    private CookieManager(String prefsName, String namePrefix) {
+        cookiePrefsName = TextUtils.isEmpty(prefsName) ? cookiePrefsName : prefsName;
+        cookieNamePrefix = TextUtils.isEmpty(namePrefix) ? cookieNamePrefix : namePrefix;
+    }
 
-    private CookieManager(IHtppCookieStore htppCookieStore) {
+    public void setHtppCookieStore(IHtppCookieStore htppCookieStore) {
         this.htppCookieStore = htppCookieStore;
     }
 
@@ -42,14 +65,14 @@ public class CookieManager {
      * 保存url对应所有cookie
      */
     public void saveCookie(HttpUrl url, Cookie cookie) {
-        htppCookieStore.saveCookie(url, cookie);
+        HttpUtils.checkNotNull(htppCookieStore,IHtppCookieStoreIsNull).saveCookie(url, cookie);
     }
 
     /**
      * 保存url对应所有cookie
      */
     public void saveCookie(HttpUrl url, List<Cookie> cookies) {
-        htppCookieStore.saveCookie(url, cookies);
+        HttpUtils.checkNotNull(htppCookieStore,IHtppCookieStoreIsNull).saveCookie(url, cookies);
     }
 
 
@@ -57,35 +80,42 @@ public class CookieManager {
      * 获取当前url对应的所有的cookie
      */
     public List<Cookie> getCookie(HttpUrl url) {
-        return htppCookieStore.getAllCookie();
+        return HttpUtils.checkNotNull(htppCookieStore,IHtppCookieStoreIsNull).getAllCookie();
     }
 
     /**
      * 获取当前所有保存的cookie
      */
     public List<Cookie> getAllCookie() {
-        return htppCookieStore.getAllCookie();
+        return HttpUtils.checkNotNull(htppCookieStore,IHtppCookieStoreIsNull).getAllCookie();
     }
 
     /**
      * 根据url和cookie移除对应的cookie
      */
     public boolean removeCookie(HttpUrl url, Cookie cookie) {
-        return htppCookieStore.removeCookie(url, cookie);
+        return HttpUtils.checkNotNull(htppCookieStore,IHtppCookieStoreIsNull).removeCookie(url, cookie);
     }
 
     /**
      * 根据url移除所有的cookie
      */
     public boolean removeCookie(HttpUrl url) {
-        return htppCookieStore.removeCookie(url);
+        return HttpUtils.checkNotNull(htppCookieStore,IHtppCookieStoreIsNull).removeCookie(url);
     }
 
     /**
      * 移除所有的cookie
      */
     public boolean removeAllCookie() {
-        return htppCookieStore.removeAllCookie();
+        return HttpUtils.checkNotNull(htppCookieStore,IHtppCookieStoreIsNull).removeAllCookie();
     }
 
+    public String getCookiePrefsName() {
+        return cookiePrefsName;
+    }
+
+    public String getCookieNamePrefix() {
+        return cookieNamePrefix;
+    }
 }

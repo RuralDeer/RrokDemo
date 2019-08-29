@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.cn.HttpClient;
 import com.cn.demo.gson.CustGsonConverterFactory;
+import com.cn.request.cookie.CookieManager;
 import com.cn.request.model.HttpHeaders;
 import com.cn.request.model.HttpParams;
 
@@ -19,6 +20,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        CookieManager.init("cookieSpName","cookie_");
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.put("key-1", "header-1");
         httpHeaders.put("key-2", "header-2");
