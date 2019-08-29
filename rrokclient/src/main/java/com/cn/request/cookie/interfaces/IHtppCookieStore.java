@@ -1,4 +1,4 @@
-package com.cn.request.cookie;
+package com.cn.request.cookie.interfaces;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import okhttp3.HttpUrl;
  * <p>
  * author: 鹿文龙
  */
-public interface CookieStore {
+public interface IHtppCookieStore {
 
 	/**
 	 * 保存url对应所有cookie

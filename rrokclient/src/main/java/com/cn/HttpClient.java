@@ -2,8 +2,8 @@ package com.cn;
 
 import android.content.Context;
 
-import com.cn.request.cookie.CookieJarImpl;
-import com.cn.request.cookie.SPCookieStore;
+import com.cn.request.cookie.impl.ImplCookieJar;
+import com.cn.request.cookie.model.SharedCookieStore;
 import com.cn.request.factory.RetrofitFactory;
 import com.cn.request.https.HttpsUtils;
 import com.cn.request.interceptors.ParamInterceptor;
@@ -82,8 +82,8 @@ public class HttpClient {
         builder.readTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
         builder.writeTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
         builder.connectTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
+        builder.cookieJar(new ImplCookieJar(new SharedCookieStore(context)));
         builder.addInterceptor(new ParamInterceptor());
-        builder.cookieJar(new CookieJarImpl(new SPCookieStore(context)));
 
         //信任所有证书,不安全有风险
         HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory();
@@ -130,10 +130,6 @@ public class HttpClient {
 
     public HttpParams getHttpParams() {
         return httpParams;
-    }
-
-    public CookieJarImpl getCookieStore() {
-        return (CookieJarImpl) okHttpClient.cookieJar();
     }
 
     /**

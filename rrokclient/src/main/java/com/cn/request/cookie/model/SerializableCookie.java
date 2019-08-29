@@ -1,4 +1,4 @@
-package com.cn.request.cookie;
+package com.cn.request.cookie.model;
 
 import android.content.ContentValues;
 import android.database.Cursor;

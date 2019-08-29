@@ -26,8 +26,6 @@ public interface Api {
 
     String BASE_URL = "http://192.168.1.100:8080/";
 
-    String newBaseUrl = "https://easy-mock.com/mock/5d652f42c5c10b3c6a5875b8/example/";
-
     String mockUrl = "https://easy-mock.com/mock/5d652f42c5c10b3c6a5875b8/example/getUsers";
 
     @Mock(value = mockUrl, enable = true)
@@ -46,7 +44,7 @@ public interface Api {
 
 
     @GET("getCookie")
-    Observable<UserBean> login(@Query("username") String username, @Query("password") String password);
+    Observable<UserBean> getCookie();
 
 
 }

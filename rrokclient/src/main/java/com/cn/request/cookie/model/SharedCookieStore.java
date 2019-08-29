@@ -1,8 +1,10 @@
-package com.cn.request.cookie;
+package com.cn.request.cookie.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
+
+import com.cn.request.cookie.interfaces.IHtppCookieStore;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,7 +24,7 @@ import okhttp3.HttpUrl;
  * <p>
  * author: 鹿文龙
  */
-public class SPCookieStore implements CookieStore {
+public class SharedCookieStore implements IHtppCookieStore {
 
 	private static final String COOKIE_PREFS = "http_cookie";           //cookie使用prefs保存
 	private static final String COOKIE_NAME_PREFIX = "cookie_";         //cookie持久化的统一前缀
@@ -37,7 +39,7 @@ public class SPCookieStore implements CookieStore {
 	private final Map<String, ConcurrentHashMap<String, Cookie>> cookies;
 	private final SharedPreferences cookiePrefs;
 
-	public SPCookieStore(Context context) {
+	public SharedCookieStore(Context context) {
 		cookiePrefs = context.getSharedPreferences(COOKIE_PREFS, Context.MODE_PRIVATE);
 		cookies = new HashMap<>();
 
