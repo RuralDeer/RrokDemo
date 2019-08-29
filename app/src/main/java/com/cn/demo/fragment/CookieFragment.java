@@ -14,6 +14,7 @@ import com.cn.demo.R;
 import com.cn.demo.bean.UserBean;
 import com.cn.demo.events.SendEvent;
 import com.cn.demo.fragment.base.BaseFragment;
+import com.cn.request.cookie.CookieManager;
 import com.cn.request.transformer.RxSchedulersTransformer;
 import com.uber.autodispose.AutoDispose;
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider;
@@ -21,7 +22,11 @@ import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.List;
+
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
+import okhttp3.Cookie;
 
 public class CookieFragment extends BaseFragment {
 
@@ -39,6 +44,16 @@ public class CookieFragment extends BaseFragment {
                 .subscribe(new Consumer<UserBean>() {
                     @Override
                     public void accept(UserBean userBean) throws Exception {
+ //                       CookieManager.getInstance().removeAllCookie();
+                        List<Cookie> cookies = CookieManager.getInstance().getAllCookie();
+                        if(null!=cookies && !cookies.isEmpty()){
+                            for (Cookie cookie : cookies) {
+                                Log.i("CookieFragment", "cookie_name : " + cookie.name());
+                                Log.i("CookieFragment", "cookie_value : " + cookie.value());
+                            }
+                        }else {
+                            Log.i("CookieFragment", "cookie is null");
+                        }
                         Toast.makeText(getActivity(), "success", Toast.LENGTH_SHORT).show();
                     }
                 }, new Consumer<Throwable>() {
@@ -46,6 +61,11 @@ public class CookieFragment extends BaseFragment {
                     public void accept(Throwable throwable) throws Exception {
                         Log.e("HttpClient", "throwable:" + throwable);
                         Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+
                     }
                 });
     }

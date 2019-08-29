@@ -31,27 +31,28 @@ import okhttp3.HttpUrl;
  */
 public class ImplCookieJar implements CookieJar {
 
-    private IHtppCookieStore htppCookieStore;
+	private IHtppCookieStore htppCookieStore;
 
-    public ImplCookieJar(IHtppCookieStore htppCookieStore) {
-        CookieManager.init(this);
-        if (htppCookieStore == null) {
-            throw new IllegalArgumentException("IHtppCookieStore can not be null!");
-        }
-        this.htppCookieStore = htppCookieStore;
-    }
+	public ImplCookieJar(IHtppCookieStore htppCookieStore) {
+		CookieManager.init(htppCookieStore);
+		if (htppCookieStore == null) {
+			throw new IllegalArgumentException("IHtppCookieStore can not be null!");
+		}
+		this.htppCookieStore = htppCookieStore;
+	}
 
-    @Override
-    public synchronized void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
-        htppCookieStore.saveCookie(url, cookies);
-    }
+	@Override
+	public synchronized void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+		htppCookieStore.saveCookie(url, cookies);
+	}
 
-    @Override
-    public synchronized List<Cookie> loadForRequest(HttpUrl url) {
-        return htppCookieStore.loadCookie(url);
-    }
+	@Override
+	public synchronized List<Cookie> loadForRequest(HttpUrl url) {
+		return htppCookieStore.loadCookie(url);
+	}
 
-    public IHtppCookieStore getHtppCookieStore() {
-        return htppCookieStore;
-    }
+	public IHtppCookieStore getIHtppCookieStore() {
+		return htppCookieStore;
+	}
+
 }

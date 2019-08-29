@@ -22,11 +22,11 @@ public class CookieManager {
         return instance;
     }
 
-    public static void init(ImplCookieJar cookieJar) {
+    public static void init(IHtppCookieStore htppCookieStore) {
         if (instance == null) {
             synchronized (CookieManager.class) {
                 if (instance == null) {
-                    instance = new CookieManager(cookieJar);
+                    instance = new CookieManager(htppCookieStore);
                 }
             }
         }
@@ -34,8 +34,8 @@ public class CookieManager {
 
     private IHtppCookieStore htppCookieStore;
 
-    private CookieManager(ImplCookieJar cookieJar) {
-        htppCookieStore = cookieJar.getHtppCookieStore();
+    private CookieManager(IHtppCookieStore htppCookieStore) {
+        this.htppCookieStore = htppCookieStore;
     }
 
     /**
