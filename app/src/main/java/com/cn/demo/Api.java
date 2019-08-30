@@ -28,10 +28,11 @@ public interface Api {
 
     String mockUrl = "https://easy-mock.com/mock/5d652f42c5c10b3c6a5875b8/example/getUsers";
 
-    @Mock(value = mockUrl, enable = false)
+    @Mock(value = mockUrl, enable = true)
     @GET("getUsers")
     Observable<List<TestBean>> get(@Query("page") int page, @Query("offeset") int offeset);
 
+    @Mock(value = "test/data.json", enable = true)
     @FormUrlEncoded
     @POST("postUsers")
     Observable<List<TestBean>> post(@Field("page") int page, @Field("offeset") int offeset);
