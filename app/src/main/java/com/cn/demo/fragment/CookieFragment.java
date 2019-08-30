@@ -16,6 +16,8 @@ import com.cn.demo.events.SendEvent;
 import com.cn.demo.fragment.base.BaseFragment;
 import com.cn.request.cookie.CookieManager;
 import com.cn.request.transformer.RxSchedulersTransformer;
+import com.cn.request.utils.GsonUtils;
+import com.orhanobut.logger.Logger;
 import com.uber.autodispose.AutoDispose;
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider;
 
@@ -48,8 +50,8 @@ public class CookieFragment extends BaseFragment {
                         List<Cookie> cookies = CookieManager.getInstance().getAllCookie();
                         if(null!=cookies && !cookies.isEmpty()){
                             for (Cookie cookie : cookies) {
-                                Log.i("CookieFragment", "cookie_name : " + cookie.name());
-                                Log.i("CookieFragment", "cookie_value : " + cookie.value());
+                                Logger.i("cookie_name : " + cookie.name());
+                                Logger.i("cookie_value : " + cookie.value());
                             }
                         }else {
                             Log.i("CookieFragment", "cookie is null");

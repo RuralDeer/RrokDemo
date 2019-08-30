@@ -1,12 +1,11 @@
 package com.cn;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 
-import com.cn.request.cookie.impl.ImplCookieJar;
-import com.cn.request.cookie.model.SharedCookieStore;
 import com.cn.request.factory.RetrofitFactory;
 import com.cn.request.https.HttpsUtils;
-import com.cn.request.interceptors.ParamInterceptor;
+import com.cn.request.interceptors.CommonParamInterceptor;
 import com.cn.request.mock.MockerHandler;
 import com.cn.request.model.HttpHeaders;
 import com.cn.request.model.HttpParams;
@@ -41,12 +40,13 @@ public class HttpClient {
     private Retrofit retrofit;
     private boolean needMocker;
 
+    @SuppressLint("StaticFieldLeak")
     private static volatile HttpClient instance;
 
     /**
      * 初始化
      *
-     * @return
+     * @return instance
      */
     public static HttpClient init(Context context, String baseUrl, boolean needMocker) {
         if (instance == null) {
@@ -78,40 +78,6 @@ public class HttpClient {
         this.context = context;
         this.mBaseUrl = baseUrl;
         this.needMocker = needMocker;
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.readTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
-        builder.writeTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
-        builder.connectTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
-        builder.cookieJar(new ImplCookieJar(new SharedCookieStore(context)));
-        builder.addInterceptor(new ParamInterceptor());
-
-        //信任所有证书,不安全有风险
-        HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory();
-        builder.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
-        builder.hostnameVerifier(HttpsUtils.UnSafeHostnameVerifier);
-        okHttpClient = builder.build();
-    }
-
-    /**
-     * 添加自定义OkHttpClient
-     *
-     * @param okHttpClient
-     * @return
-     */
-    public HttpClient setOkHttpClient(OkHttpClient okHttpClient) {
-        this.okHttpClient = HttpUtils.checkNotNull(okHttpClient, "okHttpClient == null");
-        return this;
-    }
-
-    /**
-     * 添加自定义解析器
-     *
-     * @param factory
-     * @return
-     */
-    public HttpClient setConverterFactory(Converter.Factory factory) {
-        this.factory = HttpUtils.checkNotNull(factory, "factory == null");
-        return this;
     }
 
     public HttpClient setHttpHeaders(HttpHeaders httpHeaders) {
@@ -130,6 +96,45 @@ public class HttpClient {
 
     public HttpParams getHttpParams() {
         return httpParams;
+    }
+
+    /**
+     * 添加自定义解析器
+     *
+     * @param factory
+     * @return this
+     */
+    public HttpClient setConverterFactory(Converter.Factory factory) {
+        this.factory = HttpUtils.checkNotNull(factory, "factory == null");
+        return this;
+    }
+
+    public void build() {
+        build(null);
+    }
+
+    /**
+     * 添加自定义OkHttpClient
+     *
+     * @param okHttpClient
+     * @return
+     */
+    public void build(OkHttpClient okHttpClient) {
+        if (null == okHttpClient) {
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            builder.readTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
+            builder.writeTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
+            builder.connectTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
+            builder.addInterceptor(new CommonParamInterceptor());
+
+            //信任所有证书,不安全有风险
+            HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory();
+            builder.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
+            builder.hostnameVerifier(HttpsUtils.UnSafeHostnameVerifier);
+            this.okHttpClient = builder.build();
+        } else {
+            this.okHttpClient = HttpUtils.checkNotNull(okHttpClient, "okHttpClient is null");
+        }
     }
 
     /**

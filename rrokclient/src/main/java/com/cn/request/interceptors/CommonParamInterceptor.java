@@ -20,7 +20,7 @@ import okhttp3.Response;
  * <p>
  * author: 鹿文龙
  */
-public class ParamInterceptor implements Interceptor {
+public class CommonParamInterceptor implements Interceptor {
 
 	@Override
 	public Response intercept(Chain chain) throws IOException {
