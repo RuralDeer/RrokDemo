@@ -10,6 +10,10 @@ import com.cn.request.https.HttpsUtils;
 import com.cn.request.interceptors.CommonParamInterceptor;
 import com.cn.request.model.HttpHeaders;
 import com.cn.request.model.HttpParams;
+import com.orhanobut.logger.AndroidLogAdapter;
+import com.orhanobut.logger.FormatStrategy;
+import com.orhanobut.logger.Logger;
+import com.orhanobut.logger.PrettyFormatStrategy;
 
 import java.util.concurrent.TimeUnit;
 
@@ -27,6 +31,16 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        FormatStrategy formatStrategy = PrettyFormatStrategy.newBuilder()
+                .showThreadInfo(false)  // (Optional) Whether to show thread info or not. Default true
+                .methodCount(0)         // (Optional) How many method line to show. Default 2
+                .methodOffset(7)        // (Optional) Hides internal method calls up to offset. Default 5
+                //.logStrategy(customLog) // (Optional) Changes the log strategy to print out. Default LogCat
+                .tag("RrokDemo_Log")   // (Optional) Global tag for every log. Default PRETTY_LOGGER
+                .build();
+
+        Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy));
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.put("key-1", "header-1");

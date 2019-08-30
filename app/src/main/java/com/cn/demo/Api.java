@@ -28,7 +28,7 @@ public interface Api {
 
     String mockUrl = "https://easy-mock.com/mock/5d652f42c5c10b3c6a5875b8/example/getUsers";
 
-    @Mock(value = mockUrl, enable = true)
+    @Mock(value = mockUrl, enable = false)
     @GET("getUsers")
     Observable<List<TestBean>> get(@Query("page") int page, @Query("offeset") int offeset);
 
