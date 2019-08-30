@@ -24,7 +24,7 @@ import retrofit2.http.Query;
  */
 public interface Api {
 
-    String BASE_URL = "http://192.168.234.104:8080/";
+    String BASE_URL = "http://192.168.1.100:8080/";
 
     String mockUrl = "https://easy-mock.com/mock/5d652f42c5c10b3c6a5875b8/example/getUsers";
 
