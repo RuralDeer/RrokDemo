@@ -1,5 +1,7 @@
 package com.cn.request.interceptors;
 
+import android.text.TextUtils;
+
 import com.cn.HttpClient;
 import com.cn.request.factory.ParamsFactory;
 import com.cn.request.request.base.IParams;
@@ -42,7 +44,9 @@ public class CommonParamInterceptor implements Interceptor {
 		if (null == httpHeaders || null == httpHeaders.getHeaders()) {return request;}
 		Request.Builder builder = request.newBuilder();
 		for (Map.Entry<String, String> entry : httpHeaders.getHeaders().entrySet()) {
-			builder.addHeader(entry.getKey(), entry.getValue());
+			if(TextUtils.isEmpty(request.headers().get(entry.getKey()))){
+				builder.addHeader(entry.getKey(), entry.getValue());
+			}
 		}
 		return builder.build();
 
