@@ -1,8 +1,11 @@
 package com.cn.request.interceptors.params;
 
+import android.text.TextUtils;
+
 import com.cn.request.request.base.IParams;
 import com.cn.request.model.HttpParams;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.FormBody;
@@ -26,13 +29,20 @@ public class PostFormBodyParams extends IParams {
 	@Override
 	public Request request() {
 
+		Map<String,Object> formBodyMap = new HashMap<>();
 		FormBody oldFormBody = (FormBody) request.body();
 		FormBody.Builder formBuilder = new FormBody.Builder();
 		for (int i = 0; i < oldFormBody.size(); i++) {
+			formBodyMap.put(oldFormBody.encodedName(i),oldFormBody.encodedValue(i));
 			formBuilder.addEncoded(oldFormBody.encodedName(i), oldFormBody.encodedValue(i));
 		}
+
+		//公共参数
 		for (Map.Entry<String, String> entry : httpParams.getParams().entrySet()) {
-			formBuilder.add(entry.getKey(), entry.getValue());
+			//如果参数中存在的则不在追加
+			if(!formBodyMap.containsKey(entry.getKey())){
+				formBuilder.add(entry.getKey(), entry.getValue());
+			}
 		}
 
 		return request.newBuilder()

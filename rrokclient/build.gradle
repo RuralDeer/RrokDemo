@@ -6,8 +6,8 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 2
-        versionName "1.1"
+        versionCode 3
+        versionName "1.2"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -51,7 +51,7 @@ publish {
     userOrg = 'ruraldeer'         //bintray注册的用户名
     groupId = 'com.cn.request'    //compile引用时的第1部分groupId，一般为包名
     artifactId = 'rrokclient'     //compile引用时的第2部分项目名，这个需要与我们之前创建的package的Name一样，要不会上传失败
-    publishVersion = '1.1'      //compile引用时的第3部分版本号
+    publishVersion = '1.2'      //compile引用时的第3部分版本号
     desc = 'RxJava2 + Retrofit2 + Okhttp '//描述  随便写
     website = 'https://github.com/RuralDeer/rrokclient'//项目的网页，可以写源码的GitHub地址
 }

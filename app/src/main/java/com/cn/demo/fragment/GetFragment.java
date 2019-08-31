@@ -52,7 +52,21 @@ public class GetFragment extends BaseFragment {
         mCacheAdapter.clear();
         switch (event.position) {
             case 0:
-                request(CacheMode.NONE_CACHE);
+                HttpClient.create(Api.class).getTest("test_value")
+                        .compose(RxSchedulersTransformer.<String>obsIoMain())
+                        //AutoDispose视情况加入，建议加入
+                        .as(AutoDispose.<String>autoDisposable(AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)))
+                        .subscribe(new Consumer<String>() {
+                            @Override
+                            public void accept(String string) throws Exception {
+                                Log.i("GetFragment", string);
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                Log.e("GetFragment", throwable.getMessage());
+                            }
+                        });
                 break;
             case 1:
                 request(CacheMode.READ_CACHE_THEN_CACHE_NET_REQUEST);

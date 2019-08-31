@@ -1,8 +1,11 @@
 package com.cn.request.interceptors.params;
 
+import android.text.TextUtils;
+
 import com.cn.request.request.base.IParams;
 import com.cn.request.model.HttpParams;
 
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.HttpUrl;
@@ -28,7 +31,10 @@ public class GetParams extends IParams {
 		HttpUrl httpUrl = request.url();
 		HttpUrl.Builder urlBuilder = httpUrl.newBuilder();
 		for (Map.Entry<String, String> entry : httpParams.getParams().entrySet()) {
-			urlBuilder.addQueryParameter(entry.getKey(), entry.getValue());
+			//如果参数中存在的则不在追加
+			if(TextUtils.isEmpty(httpUrl.queryParameter(entry.getKey()))){
+				urlBuilder.addQueryParameter(entry.getKey(), entry.getValue());
+			}
 		}
 		return request.newBuilder()
 			.method(request.method(), request.body())

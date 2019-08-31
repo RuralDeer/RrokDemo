@@ -48,8 +48,8 @@ public class App extends Application {
         httpHeaders.put("key-3", "header-3");
 
         HttpParams httpParams = new HttpParams();
-        httpParams.put("key-1", "param-1");
-        httpParams.put("key-2", "param-2");
+        httpParams.put("key-1", "");
+        httpParams.put("key-2", "");
         httpParams.put("key-3", "param-3");
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
