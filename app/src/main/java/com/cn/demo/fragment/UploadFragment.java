@@ -147,10 +147,7 @@ public class UploadFragment extends BaseFragment {
 			.file("file2", new File(selectList.get(1).getPath()))
 			.enqueue(new ApiBaseFileResult<UploadBean>() {
 				@Override
-				public void onDisposable(Disposable disposable) {
-
-				}
-
+				public void onDisposable(Disposable disposable) {}
 				@Override
 				public void onProgress(File file, int progress, long total) {
 					if (selectList.get(0).getPath().equalsIgnoreCase(file.getPath())) {
@@ -159,7 +156,6 @@ public class UploadFragment extends BaseFragment {
 						progressBar2.setProgress(progress);
 					}
 				}
-
 				@Override
 				public void onSuccess(UploadBean uploadBean) {
 					messageTv.setText(uploadBean.toString());
@@ -170,11 +166,8 @@ public class UploadFragment extends BaseFragment {
 					messageTv.setText(e.getMessage());
 				}
 
-
 				@Override
-				public void onComplete() {
-
-				}
+				public void onComplete() {}
 			});
 	}
 }

@@ -72,9 +72,7 @@ public class DownloadFragment extends BaseFragment {
 		HttpClient.download(url, path, fileName)
 			.enqueue(new ApiBaseFileResult<File>() {
 				@Override
-				public void onDisposable(Disposable disposable) {
-
-				}
+				public void onDisposable(Disposable disposable) {}
 
 				@Override
 				public void onProgress(File file, int progress, long total) {
@@ -92,9 +90,7 @@ public class DownloadFragment extends BaseFragment {
 				}
 
 				@Override
-				public void onComplete() {
-
-				}
+				public void onComplete() { }
 			});
 	}
 }

@@ -86,6 +86,7 @@ public class GetFragment extends BaseFragment {
     private void request(CacheMode cacheMode) {
 
         HttpClient.create(Api.class).get(page, offeset)
+                //此处即为缓存
                 .compose(RxResponseCacheTransformer.<List<TestBean>>obsTransformer(cacheMode))
                 .compose(RxSchedulersTransformer.<ApiResponse<List<TestBean>>>obsIoMain())
                 .as(AutoDispose.<ApiResponse<List<TestBean>>>autoDisposable(AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)))
@@ -105,33 +106,25 @@ public class GetFragment extends BaseFragment {
                     public void accept(Throwable throwable) throws Exception {
                         mErrorTv.setText(throwable.getMessage());
                     }
-                }, new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        mErrorTv.setText("请求完毕");
-                    }
                 });
 
 
-//        HttpClient.create(Api.class).get(page, offeset)
-//                .compose(RxCacheTransformer.<List<TestBean>>obsTransformer(cacheMode))
-//                .compose(RxSchedulersTransformer.<List<TestBean>>obsIoMain())
-//                .as(AutoDispose.<List<TestBean>>autoDisposable(AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)))
-//                .subscribe(new Consumer<List<TestBean>>() {
-//                    @Override
-//                    public void accept(List<TestBean> testBeans) throws Exception {
-//                        mNetAdapter.addData(testBeans);
-//                    }
-//                }, new Consumer<Throwable>() {
-//                    @Override
-//                    public void accept(Throwable throwable) throws Exception {
-//                        mErrorTv.setText(throwable.getMessage());
-//                    }
-//                }, new Action() {
-//                    @Override
-//                    public void run() throws Exception {
-//                        mErrorTv.setText("请求完毕");
-//                    }
-//                });
+        HttpClient.create(Api.class).get(page, offeset)
+                //此处即为缓存
+                .compose(RxCacheTransformer.<List<TestBean>>obsTransformer(cacheMode))
+                .compose(RxSchedulersTransformer.<List<TestBean>>obsIoMain())
+                //AutoDispose视情况加入，建议加入
+                .as(AutoDispose.<List<TestBean>>autoDisposable(AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)))
+                .subscribe(new Consumer<List<TestBean>>() {
+                    @Override
+                    public void accept(List<TestBean> testBeans) throws Exception {
+                        mNetAdapter.addData(testBeans);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        mErrorTv.setText(throwable.getMessage());
+                    }
+                });
     }
 }
