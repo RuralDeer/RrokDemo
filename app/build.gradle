@@ -6,8 +6,8 @@ android {
         applicationId "com.cn.demo"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 2
-        versionName "1.1"
+        versionCode 3
+        versionName "1.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -29,12 +29,12 @@ android {
 
     buildTypes {
         debug {
-            //开启混淆,删除无用代码
-            minifyEnabled true
-            //开启删除无用资源
-            shrinkResources true
-            signingConfig signingConfigs.debug
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            //开启混淆,删除无用代码
+//            minifyEnabled true
+//            //开启删除无用资源
+//            shrinkResources true
+//            signingConfig signingConfigs.debug
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
         release {
