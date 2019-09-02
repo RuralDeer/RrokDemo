@@ -27,8 +27,8 @@ public class CommonParamInterceptor implements Interceptor {
 	@Override
 	public Response intercept(Chain chain) throws IOException {
 		Request original = chain.request();
-		Request headers = addHeaders(original);
-		Request addParams = addParams(headers);
+		Request request = addHeaders(original);
+		Request addParams = addParams(request);
 		return chain.proceed(addParams);
 	}
 

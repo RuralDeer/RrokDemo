@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.cn.HttpClient;
 import com.cn.demo.gson.CustGsonConverterFactory;
+import com.cn.demo.utils.TestParam;
 import com.cn.request.cookie.impl.ImplCookieJar;
 import com.cn.request.cookie.model.SharedCookieStore;
 import com.cn.request.https.HttpsUtils;
@@ -48,8 +49,8 @@ public class App extends Application {
         httpHeaders.put("key-3", "header-3");
 
         HttpParams httpParams = new HttpParams();
-        httpParams.put("key-1", "");
-        httpParams.put("key-2", "");
+        httpParams.put("key-1", TestParam.getInstance().getParam());
+        httpParams.put("key-2", TestParam.param2);
         httpParams.put("key-3", "param-3");
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
@@ -91,7 +92,7 @@ public class App extends Application {
         HttpClient
                 .init(this, Api.BASE_URL, true)
                 .setHttpHeaders(httpHeaders)
-                .setHttpParams(httpParams)
+//                .setHttpParams(httpParams)
                 .setConverterFactory(CustGsonConverterFactory.create())
                 .build(builder.build());
     }

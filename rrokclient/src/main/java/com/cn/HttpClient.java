@@ -80,6 +80,18 @@ public class HttpClient {
         this.needMocker = needMocker;
     }
 
+    /**
+     * 设置公共参数
+     * @param key
+     * @param value
+     */
+    public void setHttpHeaders(String key,String value){
+        if(null == httpParams){
+            httpHeaders = new HttpHeaders();
+        }
+        httpHeaders.put(key,value);
+    }
+
     public HttpClient setHttpHeaders(HttpHeaders httpHeaders) {
         this.httpHeaders = httpHeaders;
         return this;
@@ -87,6 +99,18 @@ public class HttpClient {
 
     public HttpHeaders getHttpHeaders() {
         return httpHeaders;
+    }
+
+    /**
+     * 设置公共参数
+     * @param key
+     * @param value
+     */
+    public void setHttpParams(String key,String value){
+        if(null == httpParams){
+            httpParams = new HttpParams();
+        }
+        httpParams.put(key,value);
     }
 
     public HttpClient setHttpParams(HttpParams httpParams) {
