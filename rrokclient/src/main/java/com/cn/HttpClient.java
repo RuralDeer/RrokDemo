@@ -85,11 +85,12 @@ public class HttpClient {
      * @param key
      * @param value
      */
-    public void setHttpHeaders(String key,String value){
+    public HttpClient setHttpHeaders(String key,String value){
         if(null == httpParams){
             httpHeaders = new HttpHeaders();
         }
         httpHeaders.put(key,value);
+        return this;
     }
 
     public HttpClient setHttpHeaders(HttpHeaders httpHeaders) {
@@ -106,11 +107,12 @@ public class HttpClient {
      * @param key
      * @param value
      */
-    public void setHttpParams(String key,String value){
+    public HttpClient setHttpParams(String key,String value){
         if(null == httpParams){
             httpParams = new HttpParams();
         }
         httpParams.put(key,value);
+        return this;
     }
 
     public HttpClient setHttpParams(HttpParams httpParams) {
@@ -120,6 +122,20 @@ public class HttpClient {
 
     public HttpParams getHttpParams() {
         return httpParams;
+    }
+
+    public HttpClient removeParams(String key){
+        if(null != httpParams){
+            httpParams.remove(key);
+        }
+        return this;
+    }
+
+    public HttpClient clearParams(){
+        if(null != httpParams){
+            httpParams.clear();
+        }
+        return this;
     }
 
     /**

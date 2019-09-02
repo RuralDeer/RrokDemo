@@ -92,7 +92,7 @@ public class App extends Application {
         HttpClient
                 .init(this, Api.BASE_URL, true)
                 .setHttpHeaders(httpHeaders)
-//                .setHttpParams(httpParams)
+                .setHttpParams(httpParams)
                 .setConverterFactory(CustGsonConverterFactory.create())
                 .build(builder.build());
     }

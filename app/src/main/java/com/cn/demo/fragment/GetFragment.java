@@ -56,8 +56,7 @@ public class GetFragment extends BaseFragment {
                 TestParam.getInstance().setParam("param_1");
                 TestParam.param2 ="param_2";
 
-                HttpClient.getInstance().resetHttpParams("key-1","param_1");
-                HttpClient.getInstance().resetHttpParams("key-2","param_2");
+                HttpClient.getInstance().setHttpParams("key-1","param_1").setHttpParams("key-2","param_2").clearParams();
 
                 HttpClient.create(Api.class).postTest("new_key")
                         .compose(RxSchedulersTransformer.<String>obsIoMain())
