@@ -2,6 +2,7 @@ package com.cn.demo.fragment;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.Lifecycle;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -16,15 +17,20 @@ import android.widget.Toast;
 
 import com.cn.HttpClient;
 import com.cn.demo.R;
+import com.cn.demo.bean.TestBean;
 import com.cn.demo.events.SendEvent;
 import com.cn.demo.fragment.base.BaseFragment;
+import com.cn.request.model.ApiResponse;
 import com.cn.request.model.DownloadModel;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.uber.autodispose.AutoDispose;
+import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
+import java.util.List;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -72,6 +78,7 @@ public class DownloadFragment extends BaseFragment {
         String fileName = "mobileqq_android.apk";
         HttpClient.download(url)
                 .tObservable(path, fileName)
+                .as(AutoDispose.<DownloadModel>autoDisposable(AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)))
                 .subscribe(new Observer<DownloadModel>() {
                     @Override
                     public void onSubscribe(Disposable d) {
