@@ -11,7 +11,7 @@ import io.reactivex.disposables.Disposable;
  * <p>
  * author: 鹿文龙
  */
-public abstract class ApiBaseFileResult<T> {
+public abstract class UploadCallBack<T> {
 
 	public abstract void onDisposable(Disposable disposable);
 

@@ -1,6 +1,6 @@
-package com.cn.request.func.file;
+package com.cn.request.func.upload;
 
-import com.cn.request.call.ApiBaseFileResult;
+import com.cn.request.call.UploadCallBack;
 import com.cn.request.utils.UploadRequestBody;
 
 import java.io.File;
@@ -20,17 +20,17 @@ import okhttp3.RequestBody;
  */
 public class UploadBuilderFunc<T> implements Function<HashMap<String, File>, MultipartBody.Builder> {
 
-	private ApiBaseFileResult apiBaseFileResult;
+	private UploadCallBack<T> uploadCallBack;
 
-	public UploadBuilderFunc(ApiBaseFileResult<T> apiBaseFileResult) {
-		this.apiBaseFileResult = apiBaseFileResult;
+	public UploadBuilderFunc(UploadCallBack<T> uploadCallBack) {
+		this.uploadCallBack = uploadCallBack;
 	}
 
 	@Override
 	public MultipartBody.Builder apply(HashMap<String, File> fileMap) throws Exception {
 		MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
 		for (Map.Entry<String, File> entry : fileMap.entrySet()) {
-			RequestBody body = new UploadRequestBody<T>(entry.getValue(), apiBaseFileResult);
+			RequestBody body = new UploadRequestBody<T>(entry.getValue(), uploadCallBack);
 			builder.addFormDataPart(entry.getKey(), entry.getValue().getName(), body);
 		}
 		return builder;

@@ -1,7 +1,7 @@
-package com.cn.request.func.file;
+package com.cn.request.func.upload;
 
 import com.cn.HttpClient;
-import com.cn.request.call.ApiBaseFileResult;
+import com.cn.request.call.UploadCallBack;
 import com.cn.request.request.base.BaseApi;
 import com.cn.request.request.base.BaseRequest;
 
@@ -18,12 +18,12 @@ import okhttp3.MultipartBody;
  */
 public class UploadFunc<T> implements Function<MultipartBody.Builder, Observable<T>> {
 
-	private ApiBaseFileResult apiBaseFileResult;
+	private UploadCallBack uploadCallBack;
 
 	private BaseRequest request;
 
-	public UploadFunc(ApiBaseFileResult apiBaseFileResult, BaseRequest request) {
-		this.apiBaseFileResult = apiBaseFileResult;
+	public UploadFunc(UploadCallBack uploadCallBack, BaseRequest request) {
+		this.uploadCallBack = uploadCallBack;
 		this.request = request;
 	}
 
@@ -32,6 +32,6 @@ public class UploadFunc<T> implements Function<MultipartBody.Builder, Observable
 	public Observable<T> apply(MultipartBody.Builder builder) throws Exception {
 		return HttpClient.create(BaseApi.class)
 			.uploadFile(request.headers, request.url, request.params, builder.build().parts())
-			.map(new JsonConvertFunc<T>(apiBaseFileResult.getClass()));
+			.map(new JsonConvertFunc<T>(uploadCallBack.getClass()));
 	}
 }

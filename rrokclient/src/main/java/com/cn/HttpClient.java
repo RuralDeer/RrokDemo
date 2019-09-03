@@ -9,8 +9,8 @@ import com.cn.request.interceptors.CommonParamInterceptor;
 import com.cn.request.mock.MockerHandler;
 import com.cn.request.model.HttpHeaders;
 import com.cn.request.model.HttpParams;
-import com.cn.request.request.DownloadRequest;
-import com.cn.request.request.UploadRequest;
+import com.cn.request.request.download.DownloadRequest;
+import com.cn.request.request.upload.UploadRequest;
 import com.cn.request.utils.HttpUtils;
 
 import java.lang.reflect.Proxy;
@@ -227,8 +227,8 @@ public class HttpClient {
      * @param url
      * @return
      */
-    public static DownloadRequest download(String url, String destFileDir, String destFileName) {
-        return new DownloadRequest(url, destFileDir, destFileName);
+    public static DownloadRequest download(String url) {
+        return new DownloadRequest(url);
     }
 }
 
