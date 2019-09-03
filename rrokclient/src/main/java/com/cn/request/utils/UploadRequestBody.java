@@ -1,6 +1,6 @@
 package com.cn.request.utils;
 
-import com.cn.request.call.ApiBaseFileResult;
+import com.cn.request.call.UploadCallBack;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,12 +28,12 @@ public class UploadRequestBody<T> extends RequestBody {
 
 	private RequestBody requestBody;
 
-	private ApiBaseFileResult<T> apiBaseFileResult;
+	private UploadCallBack<T> uploadCallBack;
 
-	public UploadRequestBody(File file, ApiBaseFileResult<T> apiBaseFileResult) {
+	public UploadRequestBody(File file, UploadCallBack<T> uploadCallBack) {
 		this.file = file;
 		this.requestBody = RequestBody.create(MEDIA_TYPE, file);
-		this.apiBaseFileResult = apiBaseFileResult;
+		this.uploadCallBack = uploadCallBack;
 	}
 
 	@Override
@@ -64,8 +64,8 @@ public class UploadRequestBody<T> extends RequestBody {
 		public void write(Buffer source, long byteCount) throws IOException {
 			super.write(source, byteCount);
 			bytesWritten += byteCount;
-			if (apiBaseFileResult != null) {
-				apiBaseFileResult.onProgress(file, (int) (bytesWritten * 100 / requestBody.contentLength()), requestBody.contentLength());
+			if (uploadCallBack != null) {
+				uploadCallBack.onProgress(file, (int) (bytesWritten * 100 / requestBody.contentLength()), requestBody.contentLength());
 			}
 		}
 	}

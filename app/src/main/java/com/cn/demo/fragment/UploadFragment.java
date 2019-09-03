@@ -20,7 +20,7 @@ import com.cn.demo.adapter.GridImageAdapter;
 import com.cn.demo.bean.UploadBean;
 import com.cn.demo.events.SendEvent;
 import com.cn.demo.fragment.base.BaseFragment;
-import com.cn.request.call.ApiBaseFileResult;
+import com.cn.request.call.UploadCallBack;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -145,7 +145,7 @@ public class UploadFragment extends BaseFragment {
 			.param("name", "张三")
 			.file("file", new File(selectList.get(0).getPath()))
 			.file("file2", new File(selectList.get(1).getPath()))
-			.enqueue(new ApiBaseFileResult<UploadBean>() {
+			.enqueue(new UploadCallBack<UploadBean>() {
 				@Override
 				public void onDisposable(Disposable disposable) {}
 				@Override

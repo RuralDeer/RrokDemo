@@ -40,7 +40,7 @@ public class PostFormBodyParams extends IParams {
 		//公共参数
 		for (Map.Entry<String, String> entry : httpParams.getParams().entrySet()) {
 			//如果参数中存在的则不在追加
-			if(!formBodyMap.containsKey(entry.getKey())){
+			if(!formBodyMap.containsKey(entry.getKey()) && null!= entry.getValue()){
 				formBuilder.add(entry.getKey(), entry.getValue());
 			}
 		}

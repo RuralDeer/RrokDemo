@@ -1,9 +1,9 @@
-package com.cn.request.request;
+package com.cn.request.request.upload;
 
-import com.cn.request.call.ApiBaseFileResult;
+import com.cn.request.call.UploadCallBack;
+import com.cn.request.func.upload.UploadBuilderFunc;
+import com.cn.request.func.upload.UploadFunc;
 import com.cn.request.transformer.RxSchedulersTransformer;
-import com.cn.request.func.file.UploadBuilderFunc;
-import com.cn.request.func.file.UploadFunc;
 import com.cn.request.request.base.BaseRequest;
 
 import java.io.File;
@@ -55,30 +55,30 @@ public class UploadRequest extends BaseRequest<UploadRequest> {
 	}
 
 	//################ 回调 ###################
-	public <T> void enqueue(final ApiBaseFileResult<T> apiBaseFileResult) {
+	public <T> void enqueue(final UploadCallBack<T> uploadCallBack) {
 		Observable.just(fileMap)
-			.map(new UploadBuilderFunc<T>(apiBaseFileResult))
-			.concatMap(new UploadFunc<T>(apiBaseFileResult,this))
+			.map(new UploadBuilderFunc<T>(uploadCallBack))
+			.concatMap(new UploadFunc<T>(uploadCallBack,this))
 			.compose(RxSchedulersTransformer.<T>obsIoMain())
 			.subscribe(new Observer<T>() {
 				@Override
 				public void onSubscribe(Disposable d) {
-					apiBaseFileResult.onDisposable(d);
+					uploadCallBack.onDisposable(d);
 				}
 
 				@Override
 				public void onNext(T t) {
-					apiBaseFileResult.onSuccess(t);
+					uploadCallBack.onSuccess(t);
 				}
 
 				@Override
 				public void onError(Throwable e) {
-					apiBaseFileResult.onFailure(e);
+					uploadCallBack.onFailure(e);
 				}
 
 				@Override
 				public void onComplete() {
-					apiBaseFileResult.onComplete();
+					uploadCallBack.onComplete();
 				}
 			});
 	}

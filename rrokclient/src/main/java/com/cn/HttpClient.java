@@ -9,8 +9,8 @@ import com.cn.request.interceptors.CommonParamInterceptor;
 import com.cn.request.mock.MockerHandler;
 import com.cn.request.model.HttpHeaders;
 import com.cn.request.model.HttpParams;
-import com.cn.request.request.DownloadRequest;
-import com.cn.request.request.UploadRequest;
+import com.cn.request.request.download.DownloadRequest;
+import com.cn.request.request.upload.UploadRequest;
 import com.cn.request.utils.HttpUtils;
 
 import java.lang.reflect.Proxy;
@@ -80,6 +80,19 @@ public class HttpClient {
         this.needMocker = needMocker;
     }
 
+    /**
+     * 设置公共参数
+     * @param key
+     * @param value
+     */
+    public HttpClient setHttpHeaders(String key,String value){
+        if(null == httpParams){
+            httpHeaders = new HttpHeaders();
+        }
+        httpHeaders.put(key,value);
+        return this;
+    }
+
     public HttpClient setHttpHeaders(HttpHeaders httpHeaders) {
         this.httpHeaders = httpHeaders;
         return this;
@@ -89,6 +102,19 @@ public class HttpClient {
         return httpHeaders;
     }
 
+    /**
+     * 设置公共参数
+     * @param key
+     * @param value
+     */
+    public HttpClient setHttpParams(String key,String value){
+        if(null == httpParams){
+            httpParams = new HttpParams();
+        }
+        httpParams.put(key,value);
+        return this;
+    }
+
     public HttpClient setHttpParams(HttpParams httpParams) {
         this.httpParams = httpParams;
         return this;
@@ -96,6 +122,20 @@ public class HttpClient {
 
     public HttpParams getHttpParams() {
         return httpParams;
+    }
+
+    public HttpClient removeParams(String key){
+        if(null != httpParams){
+            httpParams.remove(key);
+        }
+        return this;
+    }
+
+    public HttpClient clearParams(){
+        if(null != httpParams){
+            httpParams.clear();
+        }
+        return this;
     }
 
     /**
@@ -187,8 +227,8 @@ public class HttpClient {
      * @param url
      * @return
      */
-    public static DownloadRequest download(String url, String destFileDir, String destFileName) {
-        return new DownloadRequest(url, destFileDir, destFileName);
+    public static DownloadRequest download(String url) {
+        return new DownloadRequest(url);
     }
 }
 

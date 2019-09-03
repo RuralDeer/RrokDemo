@@ -40,7 +40,7 @@ public interface Api {
 
     @FormUrlEncoded
     @POST("test")
-    Observable<String> postTest(@Field("key-1") String value);
+    Observable<String> postTest(@Field("new_key") String s);
 
     @Mock(value = "test/data.json", enable = true)
     @FormUrlEncoded

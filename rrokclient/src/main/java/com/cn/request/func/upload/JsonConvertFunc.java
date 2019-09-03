@@ -1,4 +1,4 @@
-package com.cn.request.func.file;
+package com.cn.request.func.upload;
 
 import com.cn.request.utils.GsonUtils;
 

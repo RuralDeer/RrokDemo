@@ -29,4 +29,14 @@ public class HttpHeaders implements Serializable {
     public LinkedHashMap<String, String> getHeaders() {
         return headers;
     }
+
+    public void remove(String key){
+        if(headers.containsKey(key)){
+            headers.remove(key);
+        }
+    }
+
+    public void clear(){
+        headers.clear();
+    }
 }

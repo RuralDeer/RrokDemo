@@ -13,6 +13,7 @@ import com.cn.demo.R;
 import com.cn.demo.bean.TestBean;
 import com.cn.demo.events.SendEvent;
 import com.cn.demo.fragment.base.BaseFragment;
+import com.cn.demo.utils.TestParam;
 import com.cn.request.enums.CacheMode;
 import com.cn.request.enums.DataSource;
 import com.cn.request.model.ApiResponse;
@@ -52,7 +53,12 @@ public class GetFragment extends BaseFragment {
         mCacheAdapter.clear();
         switch (event.position) {
             case 0:
-                HttpClient.create(Api.class).getTest("test_value")
+                TestParam.getInstance().setParam("param_1");
+                TestParam.param2 ="param_2";
+
+                HttpClient.getInstance().setHttpParams("key-1","param_1").setHttpParams("key-2","param_2").clearParams();
+
+                HttpClient.create(Api.class).postTest("new_key")
                         .compose(RxSchedulersTransformer.<String>obsIoMain())
                         //AutoDispose视情况加入，建议加入
                         .as(AutoDispose.<String>autoDisposable(AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)))

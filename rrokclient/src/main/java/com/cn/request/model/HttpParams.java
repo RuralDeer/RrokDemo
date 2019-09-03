@@ -29,4 +29,14 @@ public class HttpParams implements Serializable {
     public LinkedHashMap<String, String> getParams() {
         return params;
     }
+
+    public void remove(String key){
+        if(params.containsKey(key)){
+            params.remove(key);
+        }
+    }
+
+    public void clear(){
+        params.clear();
+    }
 }

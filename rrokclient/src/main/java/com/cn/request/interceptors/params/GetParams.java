@@ -32,7 +32,7 @@ public class GetParams extends IParams {
 		HttpUrl.Builder urlBuilder = httpUrl.newBuilder();
 		for (Map.Entry<String, String> entry : httpParams.getParams().entrySet()) {
 			//如果参数中存在的则不在追加
-			if(TextUtils.isEmpty(httpUrl.queryParameter(entry.getKey()))){
+			if(TextUtils.isEmpty(httpUrl.queryParameter(entry.getKey())) && null!= entry.getValue()){
 				urlBuilder.addQueryParameter(entry.getKey(), entry.getValue());
 			}
 		}
