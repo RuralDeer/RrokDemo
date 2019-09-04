@@ -20,7 +20,7 @@ import io.reactivex.schedulers.Schedulers;
  * <p>
  * description：RXjava 线程调度
  */
-public class RxSchedulersTransformer {
+public class RxScheduler {
 	/**
 	 * 统一线程处理
 	 * <p>

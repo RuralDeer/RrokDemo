@@ -2,7 +2,6 @@ package com.cn.demo.fragment;
 
 import android.arch.lifecycle.Lifecycle;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +15,7 @@ import com.cn.HttpClient;
 import com.cn.request.enums.CacheMode;
 import com.cn.request.enums.DataSource;
 import com.cn.request.model.ApiResponse;
-import com.cn.request.transformer.RxCacheTransformer;
 import com.cn.request.transformer.RxResponseCacheTransformer;
-import com.cn.request.transformer.RxSchedulersTransformer;
 import com.cn.request.utils.GsonUtils;
 import com.orhanobut.logger.Logger;
 import com.uber.autodispose.AutoDispose;

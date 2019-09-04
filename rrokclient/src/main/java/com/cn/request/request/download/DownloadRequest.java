@@ -5,7 +5,7 @@ import com.cn.request.func.download.FileConvertFunc;
 import com.cn.request.model.DownloadModel;
 import com.cn.request.request.base.BaseApi;
 import com.cn.request.request.base.BaseRequest;
-import com.cn.request.transformer.RxSchedulersTransformer;
+import com.cn.request.transformer.RxScheduler;
 
 import io.reactivex.Observable;
 
@@ -26,6 +26,6 @@ public class DownloadRequest extends BaseRequest<DownloadRequest> {
         return HttpClient.create(BaseApi.class)
                 .downLoadFile(headers, url, params)
                 .flatMap(new FileConvertFunc(destFileDir, destFileName))
-                .compose(RxSchedulersTransformer.<DownloadModel>obsIoMain());
+                .compose(RxScheduler.<DownloadModel>obsIoMain());
     }
 }

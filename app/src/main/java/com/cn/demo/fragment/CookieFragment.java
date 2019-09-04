@@ -15,8 +15,6 @@ import com.cn.demo.bean.UserBean;
 import com.cn.demo.events.SendEvent;
 import com.cn.demo.fragment.base.BaseFragment;
 import com.cn.request.cookie.CookieManager;
-import com.cn.request.transformer.RxSchedulersTransformer;
-import com.cn.request.utils.GsonUtils;
 import com.orhanobut.logger.Logger;
 import com.uber.autodispose.AutoDispose;
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider;

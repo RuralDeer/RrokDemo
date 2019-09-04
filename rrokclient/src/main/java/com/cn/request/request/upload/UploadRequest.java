@@ -3,7 +3,7 @@ package com.cn.request.request.upload;
 import com.cn.request.call.UploadCallBack;
 import com.cn.request.func.upload.UploadBuilderFunc;
 import com.cn.request.func.upload.UploadFunc;
-import com.cn.request.transformer.RxSchedulersTransformer;
+import com.cn.request.transformer.RxScheduler;
 import com.cn.request.request.base.BaseRequest;
 
 import java.io.File;
@@ -59,7 +59,7 @@ public class UploadRequest extends BaseRequest<UploadRequest> {
 		Observable.just(fileMap)
 			.map(new UploadBuilderFunc<T>(uploadCallBack))
 			.concatMap(new UploadFunc<T>(uploadCallBack,this))
-			.compose(RxSchedulersTransformer.<T>obsIoMain())
+			.compose(RxScheduler.<T>obsIoMain())
 			.subscribe(new Observer<T>() {
 				@Override
 				public void onSubscribe(Disposable d) {

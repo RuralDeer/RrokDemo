@@ -2,7 +2,6 @@ package com.cn.demo.fragment;
 
 import android.arch.lifecycle.Lifecycle;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +12,10 @@ import com.cn.demo.R;
 import com.cn.demo.bean.TestBean;
 import com.cn.demo.events.SendEvent;
 import com.cn.demo.fragment.base.BaseFragment;
-import com.cn.demo.utils.TestParam;
 import com.cn.request.enums.CacheMode;
 import com.cn.request.enums.DataSource;
 import com.cn.request.model.ApiResponse;
-import com.cn.request.transformer.RxCacheTransformer;
 import com.cn.request.transformer.RxResponseCacheTransformer;
-import com.cn.request.transformer.RxSchedulersTransformer;
 import com.cn.request.utils.GsonUtils;
 import com.orhanobut.logger.Logger;
 import com.uber.autodispose.AutoDispose;
@@ -30,7 +26,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
-import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 
 public class GetFragment extends BaseFragment {
@@ -75,7 +70,7 @@ public class GetFragment extends BaseFragment {
         HttpClient.create(Api.class).get(page, offeset)
                 //此处即为缓存
                 .compose(RxResponseCacheTransformer.<List<TestBean>>obsTransformer(cacheMode))
-               // .compose(RxSchedulersTransformer.<ApiResponse<List<TestBean>>>obsIoMain())
+               // .compose(RxScheduler.<ApiResponse<List<TestBean>>>obsIoMain())
                 .as(AutoDispose.<ApiResponse<List<TestBean>>>autoDisposable(AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)))
                 .subscribe(new Consumer<ApiResponse<List<TestBean>>>() {
                     @Override
