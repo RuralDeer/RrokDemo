@@ -26,11 +26,11 @@ import retrofit2.http.Query;
  */
 public interface Api {
 
-    String BASE_URL = "http://192.168.234.105:8080/";
+    String BASE_URL = "http://192.168.1.101:8080/";
 
     String mockUrl = "https://easy-mock.com/mock/5d652f42c5c10b3c6a5875b8/example/getUsers";
 
-    @Mock(value = mockUrl, enable = true)
+   // @Mock(value = mockUrl, enable = true)
     @GET("getUsers")
     Observable<List<TestBean>> get(@Query("page") int page, @Query("offeset") int offeset);
     
@@ -42,7 +42,6 @@ public interface Api {
     @POST("test")
     Observable<String> postTest(@Field("new_key") String s);
 
-    @Mock(value = "test/data.json", enable = true)
     @FormUrlEncoded
     @POST("postUsers")
     Observable<List<TestBean>> post(@Field("page") int page, @Field("offeset") int offeset);

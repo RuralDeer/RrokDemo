@@ -41,7 +41,6 @@ public class CookieFragment extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSendEvent(SendEvent event) {
         HttpClient.create(Api.class).getCookie()
-                .compose(RxSchedulersTransformer.<UserBean>obsIoMain())
                 .as(AutoDispose.<UserBean>autoDisposable(AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)))
                 .subscribe(new Consumer<UserBean>() {
                     @Override

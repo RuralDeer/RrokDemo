@@ -53,26 +53,7 @@ public class GetFragment extends BaseFragment {
         mCacheAdapter.clear();
         switch (event.position) {
             case 0:
-                TestParam.getInstance().setParam("param_1");
-                TestParam.param2 ="param_2";
-
-                HttpClient.getInstance().setHttpParams("key-1","param_1").setHttpParams("key-2","param_2").clearParams();
-
-                HttpClient.create(Api.class).postTest("new_key")
-                        .compose(RxSchedulersTransformer.<String>obsIoMain())
-                        //AutoDispose视情况加入，建议加入
-                        .as(AutoDispose.<String>autoDisposable(AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)))
-                        .subscribe(new Consumer<String>() {
-                            @Override
-                            public void accept(String string) throws Exception {
-                                Log.i("GetFragment", string);
-                            }
-                        }, new Consumer<Throwable>() {
-                            @Override
-                            public void accept(Throwable throwable) throws Exception {
-                                Log.e("GetFragment", throwable.getMessage());
-                            }
-                        });
+                request(CacheMode.NONE_CACHE);
                 break;
             case 1:
                 request(CacheMode.READ_CACHE_THEN_CACHE_NET_REQUEST);
@@ -94,7 +75,7 @@ public class GetFragment extends BaseFragment {
         HttpClient.create(Api.class).get(page, offeset)
                 //此处即为缓存
                 .compose(RxResponseCacheTransformer.<List<TestBean>>obsTransformer(cacheMode))
-                .compose(RxSchedulersTransformer.<ApiResponse<List<TestBean>>>obsIoMain())
+               // .compose(RxSchedulersTransformer.<ApiResponse<List<TestBean>>>obsIoMain())
                 .as(AutoDispose.<ApiResponse<List<TestBean>>>autoDisposable(AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)))
                 .subscribe(new Consumer<ApiResponse<List<TestBean>>>() {
                     @Override
@@ -106,25 +87,6 @@ public class GetFragment extends BaseFragment {
                             mNetAdapter.addData(listApiResponse.data);
                         }
 
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        mErrorTv.setText(throwable.getMessage());
-                    }
-                });
-
-
-        HttpClient.create(Api.class).get(page, offeset)
-                //此处即为缓存
-                .compose(RxCacheTransformer.<List<TestBean>>obsTransformer(cacheMode))
-                .compose(RxSchedulersTransformer.<List<TestBean>>obsIoMain())
-                //AutoDispose视情况加入，建议加入
-                .as(AutoDispose.<List<TestBean>>autoDisposable(AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)))
-                .subscribe(new Consumer<List<TestBean>>() {
-                    @Override
-                    public void accept(List<TestBean> testBeans) throws Exception {
-                        mNetAdapter.addData(testBeans);
                     }
                 }, new Consumer<Throwable>() {
                     @Override

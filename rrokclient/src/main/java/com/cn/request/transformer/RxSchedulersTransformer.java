@@ -37,7 +37,6 @@ public class RxSchedulersTransformer {
 			@Override
 			public Publisher<T> apply(@NonNull Flowable<T> upstream) {
 				return upstream.subscribeOn(Schedulers.io())
-					.unsubscribeOn(Schedulers.io())
 					.observeOn(AndroidSchedulers.mainThread());
 			}
 		};
@@ -54,7 +53,6 @@ public class RxSchedulersTransformer {
 			@Override
 			public ObservableSource<T> apply(Observable<T> upstream) {
 				return upstream.subscribeOn(Schedulers.io())
-					.unsubscribeOn(Schedulers.io())
 					.observeOn(AndroidSchedulers.mainThread());
 			}
 		};
