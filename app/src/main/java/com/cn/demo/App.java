@@ -4,7 +4,10 @@ import android.app.Application;
 
 import com.cn.HttpClient;
 import com.cn.demo.gson.CustGsonConverterFactory;
+import com.cn.demo.utils.SafeHostnameVerifier;
+import com.cn.demo.utils.SafeTrustManager;
 import com.cn.demo.utils.TestParam;
+import com.cn.request.cache.LruDiskCache;
 import com.cn.request.cookie.impl.ImplCookieJar;
 import com.cn.request.cookie.model.SharedCookieStore;
 import com.cn.request.https.HttpsUtils;
@@ -70,14 +73,14 @@ public class App extends Application {
         builder.addInterceptor(new CommonParamInterceptor());
 
         //方法1：信任所有证书,不安全有风险
-        HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory();
-        builder.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
-        builder.hostnameVerifier(HttpsUtils.UnSafeHostnameVerifier);
-
-//        //方法2：自定义信任规则，校验服务端证书,此处 SafeTrustManager、SafeHostnameVerifier 不可直接使用，需根据情况定义规则
-//        HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(new SafeTrustManager());
+//        HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory();
 //        builder.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
-//        builder.hostnameVerifier(new SafeHostnameVerifier());
+//        builder.hostnameVerifier(HttpsUtils.UnSafeHostnameVerifier);
+
+        //方法2：自定义信任规则，校验服务端证书,此处 SafeTrustManager、SafeHostnameVerifier 不可直接使用，需根据情况定义规则
+        HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(new SafeTrustManager());
+        builder.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
+        builder.hostnameVerifier(new SafeHostnameVerifier());
 
 //        //方法 3：使用预埋证书，校验服务端证书（自签名证书）SafeHostnameVerifier 需根据情况定义
 //        HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(getAssets().open("xxx.cer"));
@@ -88,6 +91,8 @@ public class App extends Application {
 //        HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(getAssets().open("xxx.bks"), "123456", getAssets().open("yyy.cer"));
 //        builder.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
 //        builder.hostnameVerifier(new SafeHostnameVerifier());
+
+        LruDiskCache.init(this);
 
         HttpClient
                 .init(this, Api.BASE_URL, true)

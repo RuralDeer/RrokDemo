@@ -3,6 +3,7 @@ package com.cn;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
+import com.cn.request.cache.LruDiskCache;
 import com.cn.request.factory.RetrofitFactory;
 import com.cn.request.https.HttpsUtils;
 import com.cn.request.interceptors.CommonParamInterceptor;
@@ -78,18 +79,20 @@ public class HttpClient {
         this.context = context;
         this.mBaseUrl = baseUrl;
         this.needMocker = needMocker;
+        LruDiskCache.init(context);
     }
 
     /**
      * 设置公共参数
+     *
      * @param key
      * @param value
      */
-    public HttpClient setHttpHeaders(String key,String value){
-        if(null == httpParams){
+    public HttpClient setHttpHeaders(String key, String value) {
+        if (null == httpParams) {
             httpHeaders = new HttpHeaders();
         }
-        httpHeaders.put(key,value);
+        httpHeaders.put(key, value);
         return this;
     }
 
@@ -104,14 +107,15 @@ public class HttpClient {
 
     /**
      * 设置公共参数
+     *
      * @param key
      * @param value
      */
-    public HttpClient setHttpParams(String key,String value){
-        if(null == httpParams){
+    public HttpClient setHttpParams(String key, String value) {
+        if (null == httpParams) {
             httpParams = new HttpParams();
         }
-        httpParams.put(key,value);
+        httpParams.put(key, value);
         return this;
     }
 
@@ -124,15 +128,15 @@ public class HttpClient {
         return httpParams;
     }
 
-    public HttpClient removeParams(String key){
-        if(null != httpParams){
+    public HttpClient removeParams(String key) {
+        if (null != httpParams) {
             httpParams.remove(key);
         }
         return this;
     }
 
-    public HttpClient clearParams(){
-        if(null != httpParams){
+    public HttpClient clearParams() {
+        if (null != httpParams) {
             httpParams.clear();
         }
         return this;

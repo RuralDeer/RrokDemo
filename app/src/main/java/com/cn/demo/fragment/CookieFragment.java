@@ -15,6 +15,7 @@ import com.cn.demo.bean.UserBean;
 import com.cn.demo.events.SendEvent;
 import com.cn.demo.fragment.base.BaseFragment;
 import com.cn.request.cookie.CookieManager;
+import com.cn.request.transformer.RxScheduler;
 import com.orhanobut.logger.Logger;
 import com.uber.autodispose.AutoDispose;
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider;
@@ -39,6 +40,7 @@ public class CookieFragment extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSendEvent(SendEvent event) {
         HttpClient.create(Api.class).getCookie()
+                .compose(RxScheduler.<UserBean>obsIoMain())
                 .as(AutoDispose.<UserBean>autoDisposable(AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)))
                 .subscribe(new Consumer<UserBean>() {
                     @Override
