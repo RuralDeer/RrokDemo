@@ -4,9 +4,9 @@ import android.text.TextUtils;
 
 import com.cn.HttpClient;
 import com.cn.request.factory.ParamsFactory;
-import com.cn.request.request.base.IParams;
 import com.cn.request.model.HttpHeaders;
 import com.cn.request.model.HttpParams;
+import com.cn.request.request.base.IParams;
 
 import java.io.IOException;
 import java.util.Map;

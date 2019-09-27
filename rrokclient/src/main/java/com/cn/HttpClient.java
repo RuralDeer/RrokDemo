@@ -182,6 +182,15 @@ public class HttpClient {
     }
 
     /**
+     * 获取httpClient
+     *
+     * @return
+     */
+    public OkHttpClient getOkHttpClient() {
+        return okHttpClient;
+    }
+
+    /**
      * 获取 Retrofit 实例
      *
      * @return

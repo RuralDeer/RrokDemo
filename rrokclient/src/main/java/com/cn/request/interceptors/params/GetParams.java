@@ -2,10 +2,9 @@ package com.cn.request.interceptors.params;
 
 import android.text.TextUtils;
 
-import com.cn.request.request.base.IParams;
 import com.cn.request.model.HttpParams;
+import com.cn.request.request.base.IParams;
 
-import java.util.List;
 import java.util.Map;
 
 import okhttp3.HttpUrl;

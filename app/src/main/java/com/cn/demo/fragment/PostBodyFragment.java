@@ -24,21 +24,24 @@ import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.HashMap;
 import java.util.List;
 
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
-public class GetFragment extends BaseFragment {
+public class PostBodyFragment extends BaseFragment {
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_get, container, false);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        init(view);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_post_body, container, false);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -67,17 +70,17 @@ public class GetFragment extends BaseFragment {
 
     private void request(CacheMode cacheMode) {
 
-        HttpClient.create(Api.class).get(page, offeset)
-                //此处即为缓存
+        HashMap<String, String> params = new HashMap<>();
+        params.put("tel","phone");
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), GsonUtils.formatJson(params));
+
+        HttpClient.create(Api.class)
+                .postBody(requestBody)
                 .compose(RxResponseCacheTransformer.<List<TestBean>>obsTransformer(cacheMode))
-               // .compose(RxScheduler.<ApiResponse<List<TestBean>>>obsIoMain())
                 .as(AutoDispose.<ApiResponse<List<TestBean>>>autoDisposable(AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)))
                 .subscribe(new Consumer<ApiResponse<List<TestBean>>>() {
                     @Override
                     public void accept(ApiResponse<List<TestBean>> listApiResponse) throws Exception {
-
-                        HttpClient.getInstance().setHttpHeaders("key-1", "new-header-1");
-
                         if (listApiResponse.dataSource == DataSource.CACHE) {
                             mCacheAdapter.addData(listApiResponse.data);
                             Logger.json(GsonUtils.formatJson(listApiResponse.data));
@@ -91,6 +94,12 @@ public class GetFragment extends BaseFragment {
                     public void accept(Throwable throwable) throws Exception {
                         mErrorTv.setText(throwable.getMessage());
                     }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        mErrorTv.setText("请求完毕");
+                    }
                 });
+
     }
 }
